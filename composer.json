@@ -1,0 +1,32 @@
+{
+  "name": "ezpizee/wordpress-plugin",
+  "description": "Ezpizee WordPress Connector",
+  "type": "project",
+  "keywords": ["WordPress", "Ezpizee", "E-commerce"],
+  "homepage": "https://github.com/ezpizee/WordPressConnector",
+  "license": "GPL-2.0-or-later",
+  "authors": [
+    {
+      "name": "Sothea Nim",
+      "homepage": "https://github.com/nimsothea",
+      "role": "Maintainer"
+    },
+    {
+      "name": "Sokhon Pang",
+      "homepage": "https://github.com/pangkhon",
+      "role": "Maintainer"
+    }
+  ],
+  "support": {
+    "issues": "https://github.com/ezpizee/JoomlaConnector/issues",
+    "source": "https://github.com/ezpizee/JoomlaConnector"
+  },
+  "require": {
+    "ezpizee/utils": "dev-master",
+    "ezpizee/microservices-client": "dev-master",
+    "ezpizee/connector-utils": "dev-master",
+    "ezpizee/contextprocessor": "dev-master",
+    "webconsol/php-hbs-helpers": "dev-master",
+    "webconsol/handlebars.php": "dev-master"
+  }
+}
