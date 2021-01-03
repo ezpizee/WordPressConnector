@@ -39,9 +39,9 @@ INSTALLATION
 
  4) Click on the **Install Now**
  
- 5) Upload downloaded zip file (i.e. *WordPressConnector-0.0.1.zip*). The installation will proceed.
+ 5) Go to **Settings > Ezpizee** to install / configure your Ezpizee App for WordPress
 
- 5) Wait until the installation is done, then click on the **Components > Ezpizee Portal**
+ 5) Wait until the installation is done, then click on the **Ezpizee Portal**
 
 MAINTAINERS
 -----------
