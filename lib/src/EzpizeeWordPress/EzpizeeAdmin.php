@@ -185,7 +185,6 @@ class EzpizeeAdmin
                 {
                     if (isset($response['code']) && (int)$response['code'] !== 200)
                     {
-                        self::deleteConfig();
                         if ($response['message']==='ITEM_ALREADY_EXISTS')
                         {
                             echo Hbs::render(EZPIZEE_PLUGIN_ASSET_HBS.DS.'notice.hbs', [
