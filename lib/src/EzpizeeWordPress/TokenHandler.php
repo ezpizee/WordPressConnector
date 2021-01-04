@@ -9,7 +9,7 @@ class TokenHandler implements TokenHandlerInterface
 {
     private $key = '';
     private static $cookieData = [];
-    const MAX_TOKEN_LIFE = 60*60*1000;
+    const SID = 'EZPZSESSION';
 
     public function __construct(string $key)
     {
@@ -18,8 +18,7 @@ class TokenHandler implements TokenHandlerInterface
 
     public function keepToken(Token $token): void {
         if ($this->key) {
-            if (!headers_sent() && !session_id()) {
-                session_create_id('EZPZSESSION');
+            if (!headers_sent() && !session_id(self::SID)) {
                 session_start();
             }
             $_SESSION[$this->key] = serialize($token);
@@ -28,8 +27,7 @@ class TokenHandler implements TokenHandlerInterface
 
     public function getToken(): Token {
         if ($this->key) {
-            if (!headers_sent() && !session_id()) {
-                session_create_id('EZPZSESSION');
+            if (!headers_sent() && !session_id(self::SID)) {
                 session_start();
             }
             if (isset($_SESSION[$this->key])) {
