@@ -2,14 +2,15 @@
 
 namespace EzpizeeWordPress;
 
+use Ezpizee\ConnectorUtils\Client;
 use Ezpizee\MicroservicesClient\Token;
 use Ezpizee\MicroservicesClient\TokenHandlerInterface;
+use Ezpizee\Utils\StringUtil;
 
 class TokenHandler implements TokenHandlerInterface
 {
     private $key = '';
     private static $cookieData = [];
-    const SID = 'EZPZSESSION';
 
     public function __construct(string $key)
     {
@@ -18,23 +19,26 @@ class TokenHandler implements TokenHandlerInterface
 
     public function keepToken(Token $token): void {
         if ($this->key) {
-            if (!headers_sent() && !session_id(self::SID)) {
-                session_start();
+            $sesstionTokenString = wp_get_session_token();
+            $sessionToken = \WP_Session_Tokens::get_instance(get_current_user_id());
+            $session = $sessionToken->get($sesstionTokenString);
+            $tokenInSession = $this->getOneEzpzTokenInSession($session);
+            if (empty($tokenInSession)) {
+                $session[$this->key] = json_encode($token->jsonSerialize());
             }
-            $_SESSION[$this->key] = serialize($token);
+            $sessionToken->update($sesstionTokenString, $session);
         }
     }
 
     public function getToken(): Token {
         if ($this->key) {
-            if (!headers_sent() && !session_id(self::SID)) {
-                session_start();
-            }
-            if (isset($_SESSION[$this->key])) {
-                $token = unserialize($_SESSION[$this->key]);
-                if ($token instanceof Token) {
-                    return $token;
-                }
+            $sessionTokenString = wp_get_session_token();
+            $sessionToken = \WP_Session_Tokens::get_instance(get_current_user_id());
+            $session = $sessionToken->get($sessionTokenString);
+            $tokenInSession = $this->getOneEzpzTokenInSession($session);
+            $sessionToken->update($sessionTokenString, $session);
+            if (!empty($tokenInSession)) {
+                return new Token($tokenInSession);
             }
         }
         return new Token([]);
@@ -64,5 +68,26 @@ class TokenHandler implements TokenHandlerInterface
                 TokenHandler::$cookieData['path']
             );
         }
+    }
+
+    private function getOneEzpzTokenInSession(array &$session): array {
+        $keys = [];
+        foreach ($session as $key=>$val) {
+            if (StringUtil::startsWith($key, Client::SESSION_COOKIE_VALUE_PFX)) {
+                $token = json_decode($val, true);
+                if (is_array($token) && !empty($token)) {
+                    return $token;
+                }
+                else {
+                    $keys[] = $key;
+                }
+            }
+        }
+        if (!empty($keys)) {
+            foreach ($keys as $key) {
+                unset($session[$key]);
+            }
+        }
+        return [];
     }
 }
