@@ -143,7 +143,8 @@ class ApiClient
         else if ($this->method === 'PATCH') {
             $response = $this->client->patch($this->uri, $this->body);
         }
-        return $response;
+        
+        wp_send_json($response, $response->getCode());
     }
 
     private function submitFormDataWithFile(): Response
