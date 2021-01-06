@@ -44,7 +44,7 @@ class TokenHandler implements TokenHandlerInterface
         return new Token([]);
     }
 
-    public function setCookie(string $name, string $value, int $expire=0, string $path=''): void
+    public function setCookie(string $name, string $value = null, int $expire=0, string $path=''): void
     {
         self::$cookieData['name'] = $name;
         self::$cookieData['value'] = $value;

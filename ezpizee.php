@@ -49,39 +49,32 @@ define('EZPIZEE_PLUGIN_ASSET_HTML', EZPIZEE_PLUGIN_DIR.DS.'asset'.DS.'html');
 define('EZPIZEE_PLUGIN_ASSET_HBS', EZPIZEE_PLUGIN_DIR.DS.'asset'.DS.'hbs');
 define('EZPIZEE_DELETE_LIMIT', 100000);
 
-if (file_exists(__DIR__.DS.'vendor'.DS.'autoload.php'))
-{
-    include_once __DIR__.DS.'vendor'.DS.'autoload.php';
+include_once __DIR__.DS.'ezpzlib'.DS.'autoload.php';
 
-    \Ezpizee\ContextProcessor\CustomLoader::appendPackage([
-        'EzpizeeWordPress' => __DIR__ . DS . 'lib' . DS . 'src'
-    ]);
-    \Ezpizee\ContextProcessor\CustomLoader::exec();
+\Ezpizee\ContextProcessor\CustomLoader::appendPackage([
+    'EzpizeeWordPress' => __DIR__ . DS . 'lib' . DS . 'src'
+]);
+\Ezpizee\ContextProcessor\CustomLoader::exec();
 
-    if (isset($_GET['page']) && $_GET['page'] === \EzpizeeWordPress\EzpizeeAdmin::ADMIN_PORTAL) {
-        if (strpos($_SERVER['SCRIPT_FILENAME'], \EzpizeeWordPress\EzpizeeAdmin::WP_PAGE_ADMIN) !== false) {
-            if ( ! function_exists( 'wp_create_nonce' ) ) {
-                include_once ROOT_DIR . DS . 'wp-includes' . DS . 'pluggable.php';
-                include_once ROOT_DIR . DS . 'wp-includes' . DS . 'user.php';
-            }
-            \EzpizeeWordPress\EzpizeeAdmin::displayPortalPage();
+if (isset($_GET['page']) && $_GET['page'] === \EzpizeeWordPress\EzpizeeAdmin::ADMIN_PORTAL) {
+    if (strpos($_SERVER['SCRIPT_FILENAME'], \EzpizeeWordPress\EzpizeeAdmin::WP_PAGE_ADMIN) !== false) {
+        if ( ! function_exists( 'wp_create_nonce' ) ) {
+            include_once ROOT_DIR . DS . 'wp-includes' . DS . 'pluggable.php';
+            include_once ROOT_DIR . DS . 'wp-includes' . DS . 'user.php';
         }
-    }
-
-    register_activation_hook(__FILE__, '\EzpizeeWordPress\MainReactor::pluginActivation');
-    register_deactivation_hook(__FILE__, '\EzpizeeWordPress\MainReactor::pluginDeactivation');
-
-    add_action('widgets_init', '\EzpizeeWordPress\EzpizeeWidget::register');
-    add_action('init', '\EzpizeeWordPress\MainReactor::init');
-    add_action('rest_api_init', '\EzpizeeWordPress\EzpizeeRESTAPI::init');
-
-    if (is_admin())
-    {
-        add_action('init', '\EzpizeeWordPress\EzpizeeAdmin::init');
-        add_action('admin_menu', '\EzpizeeWordPress\EzpizeeAdmin::adminMenu');
+        \EzpizeeWordPress\EzpizeeAdmin::displayPortalPage();
     }
 }
-else
+
+register_activation_hook(__FILE__, '\EzpizeeWordPress\MainReactor::pluginActivation');
+register_deactivation_hook(__FILE__, '\EzpizeeWordPress\MainReactor::pluginDeactivation');
+
+add_action('widgets_init', '\EzpizeeWordPress\EzpizeeWidget::register');
+add_action('init', '\EzpizeeWordPress\MainReactor::init');
+add_action('rest_api_init', '\EzpizeeWordPress\EzpizeeRESTAPI::init');
+
+if (is_admin())
 {
-    include_once __DIR__.DS.'asset'.DS.'html'.DS.'composer-install-instructions.php';
+    add_action('init', '\EzpizeeWordPress\EzpizeeAdmin::init');
+    add_action('admin_menu', '\EzpizeeWordPress\EzpizeeAdmin::adminMenu');
 }

@@ -22,11 +22,6 @@
     "source": "https://github.com/ezpizee/JoomlaConnector"
   },
   "require": {
-    "ezpizee/utils": "dev-master",
-    "ezpizee/microservices-client": "dev-master",
-    "ezpizee/connector-utils": "dev-master",
-    "ezpizee/contextprocessor": "dev-master",
-    "webconsol/php-hbs-helpers": "dev-master",
-    "webconsol/handlebars.php": "dev-master"
+    "ezpizee/php-libs": "dev-master"
   }
 }
