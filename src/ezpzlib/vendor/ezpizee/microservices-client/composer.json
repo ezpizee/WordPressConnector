@@ -1,0 +1,29 @@
+{
+  "name": "ezpizee/microservices-client",
+  "description": "For connecting to our microservices (likely using Kong's unirest)",
+  "homepage": "https://github.com/ezpizee/microservices-client",
+  "type": "library",
+  "minimum-stability": "dev",
+  "prefer-stable": true,
+  "license": "MIT",
+  "authors": [
+    {
+      "name": "Pang Khon",
+      "email": "pang.khon@ezpizee.com"
+    },
+    {
+      "name": "Sothea Nim",
+      "email": "sothea.nim@ezpizee.com.com"
+    }
+  ],
+  "require": {
+    "php": ">=7.1",
+    "mashape/unirest-php": "^3.0",
+    "ezpizee/utils": "dev-master"
+  },
+  "autoload": {
+    "psr-0": {
+      "Ezpizee\\MicroservicesClient": "src/"
+    }
+  }
+}

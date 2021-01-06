@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="utf-8"?>
+<extension type="library" method="upgrade" version="1.7.0">
+    <name>Ezpizee PHP Connector Library</name>
+    <libraryname>ezpzlib</libraryname>
+    <author>Sothea Nim</author>
+    <authorUrl>https://www.ezpizee.com</authorUrl>
+    <creationDate>January 2021</creationDate>
+    <copyright>(C) 2020 - 2021 Ezpizee Co., Ltd. All rights reserved.</copyright>
+    <license>GNU General Public License version 2 or later; see LICENSE.txt</license>
+    <!--  The version string is recorded in the components table -->
+    <version>0.0.1</version>
+    <!-- The description is optional and defaults to the name -->
+    <description>This is the main library for Ezpizee CMS Connector</description>
+    <files>
+        <filename>autoload.php</filename>
+        <filename>.gitignore</filename>
+        <filename>composer.json</filename>
+        <filename>composer.lock</filename>
+        <filename>README.md</filename>
+        <folder>vendor</folder>
+    </files>
+</extension>

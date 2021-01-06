@@ -1,0 +1,29 @@
+{
+  "name": "ezpizee/connector-utils",
+  "description": "PHP utility classes for Ezpizee's PHP connectors",
+  "homepage": "https://github.com/ezpizee/PHPConnectorUtils",
+  "type": "library",
+  "minimum-stability": "dev",
+  "prefer-stable": true,
+  "license": "MIT",
+  "authors": [
+    {
+      "name": "Pang Khon",
+      "email": "khon.pang@ezpizee.com"
+    },
+    {
+      "name": "Sothea Nim",
+      "email": "sothea.nim@ezpizee.com.com"
+    }
+  ],
+  "require": {
+    "php": ">=7.1",
+    "ezpizee/utils": "dev-master",
+    "ezpizee/microservices-client": "dev-master"
+  },
+  "autoload": {
+    "psr-0": {
+      "Ezpizee\\ConnectorUtils": "src/"
+    }
+  }
+}

@@ -1,0 +1,26 @@
+{
+  "name": "webconsol/php-hbs-helpers",
+  "version": "1.0.0",
+  "description": "PHP Handlebars Helpers",
+  "type": "library",
+  "keywords": [
+    "handlebars"
+  ],
+  "homepage": "https://github.com/WEBCONSOL/php-hbs-helpers",
+  "license": "MIT",
+  "authors": [
+    {
+      "name": "Sothea Nim",
+      "email": "sothea.nim@webconsol.com",
+      "homepage": "https://www.webconsol.com"
+    }
+  ],
+  "require": {
+    "php": ">=7.1"
+  },
+  "autoload": {
+    "psr-0": {
+      "HandlebarsHelpers\\": "src/"
+    }
+  }
+}
