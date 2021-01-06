@@ -53,8 +53,7 @@ include_once __DIR__.DS.'ezpzlib'.DS.'autoload.php';
 
 \Ezpizee\ContextProcessor\CustomLoader::appendPackage([
     'EzpizeeWordPress' => __DIR__ . DS . 'lib' . DS . 'src'
-]);
-\Ezpizee\ContextProcessor\CustomLoader::exec();
+], true);
 
 if (isset($_GET['page']) && $_GET['page'] === \EzpizeeWordPress\EzpizeeAdmin::ADMIN_PORTAL) {
     if (strpos($_SERVER['SCRIPT_FILENAME'], \EzpizeeWordPress\EzpizeeAdmin::WP_PAGE_ADMIN) !== false) {
