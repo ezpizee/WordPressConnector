@@ -10,7 +10,7 @@ CONTENTS OF THIS FILE
 INTRODUCTION
 ------------
 
-Ezpizee WordPress Connector intends to be used for integrating Ezpizee, SaaS based e-commerce platform, with WordPress,
+Ezpizee Connector intends to be used for integrating Ezpizee, SaaS based e-commerce platform, with WordPress,
 providing a fast and full access to all administration links.
 
  * For a full description of the module, visit the project page:

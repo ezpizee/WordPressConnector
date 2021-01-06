@@ -3,13 +3,13 @@
  * @package Ezpizee
  */
 /*
-Plugin Name: Ezpizee WordPress Connector
+Plugin Name: Ezpizee Connector
 Plugin URI: https://www.ezpizee.com/
 Description: For accessing Ezpizee Portal right inside WordPress and integrating Ezpizee e-commerce with WordPress.
-Version: 0.0.1
+Version: 0.0.3
 Author: Sothea Nim
 Author URI: https://github.com/nimsothea
-License: GPLv2 or later
+License: GNU General Public License version 2 or later; see LICENSE.txt
 Text Domain: ezpizee
 */
 
