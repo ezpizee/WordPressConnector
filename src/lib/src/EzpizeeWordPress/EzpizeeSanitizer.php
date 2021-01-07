@@ -16,7 +16,7 @@ class EzpizeeSanitizer
         }
         else if (is_string($value) || is_numeric($value))
         {
-            $value = self::removeTags(htmlentities(trim($value), ENT_QUOTES, 'UTF-8'), $removeTags, $allowedTags);
+            $value = htmlentities(self::removeTags(trim($value), $removeTags, $allowedTags), ENT_QUOTES, 'UTF-8');
         }
     }
 
