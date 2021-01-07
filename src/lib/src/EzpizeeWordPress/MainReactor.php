@@ -52,7 +52,7 @@ class MainReactor
 
     private static function bailOnActivation( $message, $deactivate = true )
     {
-        include EZPIZEE_PLUGIN_ASSET_HTML.DS.'bail-on-activation.php';
+        include EZPIZEE_PLUGIN_ASSET_HTML.EZPIZEE_DS.'bail-on-activation.php';
         if ( $deactivate ) {
             $plugins = get_option( 'active_plugins' );
             $ezpizee = plugin_basename( EZPIZEE_PLUGIN_DIR . 'ezpizee.php' );

@@ -35,7 +35,7 @@ class EzpizeeAdmin
     public static function displayInstallPage()
     {
         self::onInstallConfigSubmit();
-        include EZPIZEE_PLUGIN_ASSET_HTML . DS . 'install.php';
+        include EZPIZEE_PLUGIN_ASSET_HTML . EZPIZEE_DS . 'install.php';
     }
 
     public static function displayPortalPage()
@@ -115,7 +115,7 @@ class EzpizeeAdmin
                     {
                         if (self::saveConfig())
                         {
-                            echo Hbs::render(EZPIZEE_PLUGIN_ASSET_HBS.DS.'notice.hbs', [
+                            echo Hbs::render(EZPIZEE_PLUGIN_ASSET_HBS.EZPIZEE_DS.'notice.hbs', [
                                 'message' => __('Successfully saved', 'ezpizee'),
                                 'type' => 'success'
                             ]);
@@ -123,7 +123,7 @@ class EzpizeeAdmin
                     }
                     else
                     {
-                        echo Hbs::render(EZPIZEE_PLUGIN_ASSET_HBS.DS.'notice.hbs', [
+                        echo Hbs::render(EZPIZEE_PLUGIN_ASSET_HBS.EZPIZEE_DS.'notice.hbs', [
                             'message' => __('Missing or invalid data', 'ezpizee'),
                             'type' => 'error'
                         ]);
@@ -131,7 +131,7 @@ class EzpizeeAdmin
                 }
                 else
                 {
-                    echo Hbs::render(EZPIZEE_PLUGIN_ASSET_HBS.DS.'notice.hbs', [
+                    echo Hbs::render(EZPIZEE_PLUGIN_ASSET_HBS.EZPIZEE_DS.'notice.hbs', [
                         'message' => __('Invalid nonce', 'ezpizee'),
                         'type' => 'notice'
                     ]);
@@ -139,7 +139,7 @@ class EzpizeeAdmin
             }
             else
             {
-                echo Hbs::render(EZPIZEE_PLUGIN_ASSET_HBS.DS.'notice.hbs', [
+                echo Hbs::render(EZPIZEE_PLUGIN_ASSET_HBS.EZPIZEE_DS.'notice.hbs', [
                     'message' => __('Invalid request', 'ezpizee'),
                     'type' => 'error'
                 ]);
@@ -187,14 +187,14 @@ class EzpizeeAdmin
                     {
                         if ($response['message']==='ITEM_ALREADY_EXISTS')
                         {
-                            echo Hbs::render(EZPIZEE_PLUGIN_ASSET_HBS.DS.'notice.hbs', [
+                            echo Hbs::render(EZPIZEE_PLUGIN_ASSET_HBS.EZPIZEE_DS.'notice.hbs', [
                                 'message' => __('Failed to install. App with the same name already exists.', 'ezpizee'),
                                 'type' => 'error'
                             ]);
                         }
                         else
                         {
-                            echo Hbs::render(EZPIZEE_PLUGIN_ASSET_HBS.DS.'notice.hbs', [
+                            echo Hbs::render(EZPIZEE_PLUGIN_ASSET_HBS.EZPIZEE_DS.'notice.hbs', [
                                 'message' => __($response['message'], 'ezpizee'),
                                 'type' => 'error'
                             ]);
@@ -208,7 +208,7 @@ class EzpizeeAdmin
                 }
                 else
                 {
-                    echo Hbs::render(EZPIZEE_PLUGIN_ASSET_HBS.DS.'notice.hbs', [
+                    echo Hbs::render(EZPIZEE_PLUGIN_ASSET_HBS.EZPIZEE_DS.'notice.hbs', [
                         'message' => __('Unknown error occurred', 'ezpizee'),
                         'type' => 'error'
                     ]);
@@ -217,7 +217,7 @@ class EzpizeeAdmin
             else
             {
                 self::$configFormData = [];
-                echo Hbs::render(EZPIZEE_PLUGIN_ASSET_HBS.DS.'notice.hbs', [
+                echo Hbs::render(EZPIZEE_PLUGIN_ASSET_HBS.EZPIZEE_DS.'notice.hbs', [
                     'message' => __('Failed to save the configuration data', 'ezpizee'),
                     'type' => 'error'
                 ]);
@@ -248,7 +248,7 @@ class EzpizeeAdmin
             'manage_options',
             self::ADMIN_PORTAL,
             '\EzpizeeWordPress\EzpizeeAdmin::displayPortalPage',
-            '/wp-content/plugins/ezpizee/asset/images/favicon-32x32.png',
+            EZPIZEE_PLUGIN_URL_ROOT .'/asset/images/favicon-32x32.png',
             null
         );
     }
@@ -269,7 +269,7 @@ class EzpizeeAdmin
     {
         $patterns = ["\n", "\r", "\t", "\s+", "{loginPageRedirectUrl}"];
         $replaces = ["", "", "", " ", "/wp-admin/"];
-        $override = str_replace($patterns, $replaces, file_get_contents(EZPIZEE_PLUGIN_ASSET_DATA . DS . 'ezpz_admin_override.js'));
+        $override = str_replace($patterns, $replaces, file_get_contents(EZPIZEE_PLUGIN_ASSET_DATA . EZPIZEE_DS . 'ezpz_admin_override.js'));
         $output = str_replace('<' . 'head>', '<' . 'head' . '><' . 'script>' . $override . '</' . 'script>', $output);
     }
 }
