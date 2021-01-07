@@ -5,7 +5,6 @@ namespace EzpizeeWordPress;
 use Ezpizee\ConnectorUtils\Client;
 use Ezpizee\Utils\EncodingUtil;
 use HandlebarsHelpers\Hbs;
-use wpdb;
 
 class EzpizeeAdmin
 {
@@ -48,12 +47,13 @@ class EzpizeeAdmin
         }
         else
         {
-            if (isset($_GET['view']) && isset($_GET['endpoint']) &&
-                filter_input(INPUT_GET, 'view') === 'api' && !empty($_GET['endpoint']))
+            $view = EzpizeeSanitizer::filterGET('view', FILTER_SANITIZE_STRING);
+            $endpoint = EzpizeeSanitizer::filterGET('endpoint', FILTER_SANITIZE_URL);
+            if ($view === 'api' && strlen($endpoint) > 0)
             {
                 header('Content-Type: application/json');
                 $apiClient = new ApiClient(MainReactor::getConfig());
-                die(json_encode($apiClient->load(filter_input(INPUT_GET, 'endpoint', FILTER_SANITIZE_STRING))));
+                die(json_encode($apiClient->load($endpoint)));
             }
             else
             {
@@ -115,7 +115,7 @@ class EzpizeeAdmin
                     {
                         if (self::saveConfig())
                         {
-                            echo Hbs::render(EZPIZEE_PLUGIN_ASSET_HBS.EZPIZEE_DS.'notice.hbs', [
+                            echo Hbs::render(EZPIZEE_PLUGIN_ASSET_HBS. EZPIZEE_DS .'notice.hbs', [
                                 'message' => __('Successfully saved', 'ezpizee'),
                                 'type' => 'success'
                             ]);
@@ -123,7 +123,7 @@ class EzpizeeAdmin
                     }
                     else
                     {
-                        echo Hbs::render(EZPIZEE_PLUGIN_ASSET_HBS.EZPIZEE_DS.'notice.hbs', [
+                        echo Hbs::render(EZPIZEE_PLUGIN_ASSET_HBS. EZPIZEE_DS .'notice.hbs', [
                             'message' => __('Missing or invalid data', 'ezpizee'),
                             'type' => 'error'
                         ]);
@@ -131,7 +131,7 @@ class EzpizeeAdmin
                 }
                 else
                 {
-                    echo Hbs::render(EZPIZEE_PLUGIN_ASSET_HBS.EZPIZEE_DS.'notice.hbs', [
+                    echo Hbs::render(EZPIZEE_PLUGIN_ASSET_HBS. EZPIZEE_DS .'notice.hbs', [
                         'message' => __('Invalid nonce', 'ezpizee'),
                         'type' => 'notice'
                     ]);
@@ -139,7 +139,7 @@ class EzpizeeAdmin
             }
             else
             {
-                echo Hbs::render(EZPIZEE_PLUGIN_ASSET_HBS.EZPIZEE_DS.'notice.hbs', [
+                echo Hbs::render(EZPIZEE_PLUGIN_ASSET_HBS. EZPIZEE_DS .'notice.hbs', [
                     'message' => __('Invalid request', 'ezpizee'),
                     'type' => 'error'
                 ]);
@@ -153,14 +153,15 @@ class EzpizeeAdmin
 
     private static function isValidInstallConfigSubmission(): bool
     {
-        if (isset($_POST[Client::KEY_CLIENT_ID]) && EncodingUtil::isValidMd5($_POST[Client::KEY_CLIENT_ID])) {
-            self::$configFormData[Client::KEY_CLIENT_ID] = $_POST[Client::KEY_CLIENT_ID];
-            if (isset($_POST[Client::KEY_CLIENT_SECRET]) && EncodingUtil::isValidMd5($_POST[Client::KEY_CLIENT_SECRET])) {
-                self::$configFormData[Client::KEY_CLIENT_SECRET] = $_POST[Client::KEY_CLIENT_SECRET];
-                if (isset($_POST[Client::KEY_APP_NAME]) && strlen($_POST[Client::KEY_APP_NAME]) > 0) {
-                    self::$configFormData[Client::KEY_APP_NAME] = $_POST[Client::KEY_APP_NAME];
-                    if (isset($_POST[Client::KEY_ENV]) && strlen($_POST[Client::KEY_ENV]) > 0) {
-                        self::$configFormData[Client::KEY_ENV] = $_POST[Client::KEY_ENV];
+        self::$configFormData[Client::KEY_CLIENT_ID] = EzpizeeSanitizer::filterPOST(Client::KEY_CLIENT_ID, FILTER_SANITIZE_STRING);
+        if (EncodingUtil::isValidMd5(self::$configFormData[Client::KEY_CLIENT_ID])) {
+            self::$configFormData[Client::KEY_CLIENT_SECRET] = EzpizeeSanitizer::filterPOST(Client::KEY_CLIENT_SECRET, FILTER_SANITIZE_STRING);
+            if (EncodingUtil::isValidMd5(self::$configFormData[Client::KEY_CLIENT_SECRET])) {
+                self::$configFormData[Client::KEY_APP_NAME] = EzpizeeSanitizer::filterPOST(Client::KEY_APP_NAME, FILTER_SANITIZE_STRING);
+                if (strlen(self::$configFormData[Client::KEY_APP_NAME]) > 0) {
+                    self::$configFormData[Client::KEY_ENV] = EzpizeeSanitizer::filterPOST(Client::KEY_ENV, FILTER_SANITIZE_STRING);
+                    if (strlen(self::$configFormData[Client::KEY_ENV])) {
+                        EzpizeeSanitizer::sanitize(self::$configFormData);
                         return true;
                     }
                 }
@@ -187,14 +188,14 @@ class EzpizeeAdmin
                     {
                         if ($response['message']==='ITEM_ALREADY_EXISTS')
                         {
-                            echo Hbs::render(EZPIZEE_PLUGIN_ASSET_HBS.EZPIZEE_DS.'notice.hbs', [
+                            echo Hbs::render(EZPIZEE_PLUGIN_ASSET_HBS. EZPIZEE_DS .'notice.hbs', [
                                 'message' => __('Failed to install. App with the same name already exists.', 'ezpizee'),
                                 'type' => 'error'
                             ]);
                         }
                         else
                         {
-                            echo Hbs::render(EZPIZEE_PLUGIN_ASSET_HBS.EZPIZEE_DS.'notice.hbs', [
+                            echo Hbs::render(EZPIZEE_PLUGIN_ASSET_HBS. EZPIZEE_DS .'notice.hbs', [
                                 'message' => __($response['message'], 'ezpizee'),
                                 'type' => 'error'
                             ]);
@@ -208,7 +209,7 @@ class EzpizeeAdmin
                 }
                 else
                 {
-                    echo Hbs::render(EZPIZEE_PLUGIN_ASSET_HBS.EZPIZEE_DS.'notice.hbs', [
+                    echo Hbs::render(EZPIZEE_PLUGIN_ASSET_HBS. EZPIZEE_DS .'notice.hbs', [
                         'message' => __('Unknown error occurred', 'ezpizee'),
                         'type' => 'error'
                     ]);
@@ -217,7 +218,7 @@ class EzpizeeAdmin
             else
             {
                 self::$configFormData = [];
-                echo Hbs::render(EZPIZEE_PLUGIN_ASSET_HBS.EZPIZEE_DS.'notice.hbs', [
+                echo Hbs::render(EZPIZEE_PLUGIN_ASSET_HBS. EZPIZEE_DS .'notice.hbs', [
                     'message' => __('Failed to save the configuration data', 'ezpizee'),
                     'type' => 'error'
                 ]);

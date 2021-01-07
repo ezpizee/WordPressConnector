@@ -75,9 +75,11 @@ include_once __DIR__.EZPIZEE_DS.'ezpzlib'.EZPIZEE_DS.'autoload.php';
     'EzpizeeWordPress' => __DIR__ . EZPIZEE_DS . 'lib' . EZPIZEE_DS . 'src'
 ], true);
 
-if (isset($_GET['page']) && $_GET['page'] === \EzpizeeWordPress\EzpizeeAdmin::ADMIN_PORTAL) {
-    if (strpos($_SERVER['SCRIPT_FILENAME'], \EzpizeeWordPress\EzpizeeAdmin::WP_PAGE_ADMIN) !== false) {
-        if ( ! function_exists( 'wp_create_nonce' ) ) {
+if (isset($_GET['page']) &&
+    trim(filter_input(INPUT_GET, 'page', FILTER_SANITIZE_STRING)) === \EzpizeeWordPress\EzpizeeAdmin::ADMIN_PORTAL) {
+    if (strpos(filter_input(INPUT_SERVER, 'SCRIPT_FILENAME', FILTER_SANITIZE_STRING),
+            \EzpizeeWordPress\EzpizeeAdmin::WP_PAGE_ADMIN) !== false) {
+        if (!function_exists( 'wp_create_nonce')) {
             include_once EZPIZEE_WP_ROOT_DIR . EZPIZEE_DS . 'wp-includes' . EZPIZEE_DS . 'pluggable.php';
             include_once EZPIZEE_WP_ROOT_DIR . EZPIZEE_DS . 'wp-includes' . EZPIZEE_DS . 'user.php';
         }
