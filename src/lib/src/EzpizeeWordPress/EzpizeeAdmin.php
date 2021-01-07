@@ -5,6 +5,7 @@ namespace EzpizeeWordPress;
 use Ezpizee\ConnectorUtils\Client;
 use Ezpizee\Utils\EncodingUtil;
 use HandlebarsHelpers\Hbs;
+use RuntimeException;
 
 class EzpizeeAdmin
 {
@@ -48,12 +49,19 @@ class EzpizeeAdmin
         else
         {
             $view = EzpizeeSanitizer::filterGET('view', FILTER_SANITIZE_STRING);
-            $endpoint = EzpizeeSanitizer::filterGET('endpoint', FILTER_SANITIZE_URL);
-            if ($view === 'api' && strlen($endpoint) > 0)
+            EzpizeeSanitizer::sanitize($view, true);
+            if ($view === 'api')
             {
-                header('Content-Type: application/json');
-                $apiClient = new ApiClient(MainReactor::getConfig());
-                die(json_encode($apiClient->load($endpoint)));
+                $endpoint = EzpizeeSanitizer::filterGET('endpoint', FILTER_SANITIZE_URL);
+                EzpizeeSanitizer::sanitize($endpoint, true);
+                if (strlen($endpoint) > 0) {
+                    header('Content-Type: application/json');
+                    $apiClient = new ApiClient(MainReactor::getConfig());
+                    die(json_encode($apiClient->load($endpoint)));
+                }
+                else {
+                    throw new RuntimeException('Invalid request', 500);
+                }
             }
             else
             {
