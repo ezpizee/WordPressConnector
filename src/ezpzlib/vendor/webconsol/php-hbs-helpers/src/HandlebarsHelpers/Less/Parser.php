@@ -251,7 +251,7 @@ class Parser {
                 $hidden = true;
                 if (!isset($block->args)) {
                     foreach ($block->tags as $tag) {
-                        if (!is_string($tag) || $tag{0} != $this->lessc->mPrefix) {
+                        if (!is_string($tag) || (!empty($tag) && substr($tag, 0, 1) != $this->lessc->mPrefix)) {
                             $hidden = false;
                             break;
                         }
@@ -305,7 +305,7 @@ class Parser {
     protected function fixTags($tags) {
         // move @ tags out of variable namespace
         foreach ($tags as &$tag) {
-            if ($tag{0} == $this->lessc->vPrefix)
+            if (!empty($tag) && substr($tag, 0, 1) == $this->lessc->vPrefix)
                 $tag[0] = $this->lessc->mPrefix;
         }
         return $tags;
