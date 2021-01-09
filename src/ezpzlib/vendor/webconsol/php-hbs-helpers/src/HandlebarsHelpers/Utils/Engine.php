@@ -18,6 +18,7 @@ class Engine extends Handlebars
         if (file_exists($template)) {
             $template = file_get_contents($template);
         }
+        (new Processor())->process($template, $context);
         return $this->loadTemplate($template)->render(new Context($context));
     }
 }

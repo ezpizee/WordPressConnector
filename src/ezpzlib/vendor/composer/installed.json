@@ -7,20 +7,20 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/ezpizee/PHPConnectorUtils.git",
-                "reference": "cb65798a0af4fdb7a8dfedd7c23ffa447797a2e1"
+                "reference": "cc3c6bfa35ae4b2e310a616958d3a5de85583e07"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/ezpizee/PHPConnectorUtils/zipball/cb65798a0af4fdb7a8dfedd7c23ffa447797a2e1",
-                "reference": "cb65798a0af4fdb7a8dfedd7c23ffa447797a2e1",
+                "url": "https://api.github.com/repos/ezpizee/PHPConnectorUtils/zipball/cc3c6bfa35ae4b2e310a616958d3a5de85583e07",
+                "reference": "cc3c6bfa35ae4b2e310a616958d3a5de85583e07",
                 "shasum": ""
             },
             "require": {
                 "ezpizee/microservices-client": "dev-master",
                 "ezpizee/utils": "dev-master",
-                "php": ">=7.2"
+                "php": ">=7.1"
             },
-            "time": "2021-01-06T15:52:00+00:00",
+            "time": "2021-01-06T15:57:45+00:00",
             "default-branch": true,
             "type": "library",
             "installation-source": "source",
@@ -58,19 +58,19 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/ezpizee/PHPBaseContextProcessor.git",
-                "reference": "2d1944232b0336d42bd857daead7a6643e1c075d"
+                "reference": "05f5a33dfd9952622c9daedbed1a0330183c2048"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/ezpizee/PHPBaseContextProcessor/zipball/2d1944232b0336d42bd857daead7a6643e1c075d",
-                "reference": "2d1944232b0336d42bd857daead7a6643e1c075d",
+                "url": "https://api.github.com/repos/ezpizee/PHPBaseContextProcessor/zipball/05f5a33dfd9952622c9daedbed1a0330183c2048",
+                "reference": "05f5a33dfd9952622c9daedbed1a0330183c2048",
                 "shasum": ""
             },
             "require": {
                 "ezpizee/utils": "dev-master",
-                "php": ">=7.2"
+                "php": ">=7.1"
             },
-            "time": "2021-01-06T15:51:41+00:00",
+            "time": "2021-01-07T00:37:38+00:00",
             "default-branch": true,
             "type": "library",
             "installation-source": "source",
@@ -108,20 +108,20 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/ezpizee/microservices-client.git",
-                "reference": "f88bc30705d552c37f99b819bfe6fd956afece73"
+                "reference": "44c071ac9f8a2a128e23f99d6e7f6793561f63e5"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/ezpizee/microservices-client/zipball/f88bc30705d552c37f99b819bfe6fd956afece73",
-                "reference": "f88bc30705d552c37f99b819bfe6fd956afece73",
+                "url": "https://api.github.com/repos/ezpizee/microservices-client/zipball/44c071ac9f8a2a128e23f99d6e7f6793561f63e5",
+                "reference": "44c071ac9f8a2a128e23f99d6e7f6793561f63e5",
                 "shasum": ""
             },
             "require": {
                 "ezpizee/utils": "dev-master",
                 "mashape/unirest-php": "^3.0",
-                "php": ">=7.3"
+                "php": ">=7.1"
             },
-            "time": "2021-01-06T15:52:35+00:00",
+            "time": "2021-01-06T15:58:29+00:00",
             "default-branch": true,
             "type": "library",
             "installation-source": "source",
@@ -159,18 +159,18 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/ezpizee/microservices-utils.git",
-                "reference": "e73642b6927b926e28d7d5818ebe96eb9c004720"
+                "reference": "71fef1c6852ba7900d14f3ca5cf469bf200e2a49"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/ezpizee/microservices-utils/zipball/e73642b6927b926e28d7d5818ebe96eb9c004720",
-                "reference": "e73642b6927b926e28d7d5818ebe96eb9c004720",
+                "url": "https://api.github.com/repos/ezpizee/microservices-utils/zipball/71fef1c6852ba7900d14f3ca5cf469bf200e2a49",
+                "reference": "71fef1c6852ba7900d14f3ca5cf469bf200e2a49",
                 "shasum": ""
             },
             "require": {
-                "php": ">=7.3"
+                "php": ">=7.1"
             },
-            "time": "2021-01-06T15:51:10+00:00",
+            "time": "2021-01-07T00:37:08+00:00",
             "default-branch": true,
             "type": "library",
             "installation-source": "source",
@@ -336,24 +336,98 @@
             "install-path": "../mashape/unirest-php"
         },
         {
+            "name": "masterminds/html5",
+            "version": "2.x-dev",
+            "version_normalized": "2.9999999.9999999.9999999-dev",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/Masterminds/html5-php.git",
+                "reference": "cadcfaaa13153e0e8eb92c49a53e140cf1a85dea"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/Masterminds/html5-php/zipball/cadcfaaa13153e0e8eb92c49a53e140cf1a85dea",
+                "reference": "cadcfaaa13153e0e8eb92c49a53e140cf1a85dea",
+                "shasum": ""
+            },
+            "require": {
+                "ext-ctype": "*",
+                "ext-dom": "*",
+                "ext-libxml": "*",
+                "php": ">=5.3.0"
+            },
+            "require-dev": {
+                "phpunit/phpunit": "4.*",
+                "sami/sami": "~2.0",
+                "satooshi/php-coveralls": "1.0.*"
+            },
+            "time": "2018-11-17T20:24:36+00:00",
+            "type": "library",
+            "extra": {
+                "branch-alias": {
+                    "dev-master": "2.2-dev"
+                }
+            },
+            "installation-source": "source",
+            "autoload": {
+                "psr-4": {
+                    "Masterminds\\": "src"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Matt Butcher",
+                    "email": "technosophos@gmail.com"
+                },
+                {
+                    "name": "Asmir Mustafic",
+                    "email": "goetas@gmail.com"
+                },
+                {
+                    "name": "Matt Farina",
+                    "email": "matt@mattfarina.com"
+                }
+            ],
+            "description": "An HTML5 parser and serializer.",
+            "homepage": "http://masterminds.github.io/html5-php",
+            "keywords": [
+                "HTML5",
+                "dom",
+                "html",
+                "parser",
+                "querypath",
+                "serializer",
+                "xml"
+            ],
+            "support": {
+                "issues": "https://github.com/Masterminds/html5-php/issues",
+                "source": "https://github.com/Masterminds/html5-php/tree/2.x"
+            },
+            "install-path": "../masterminds/html5"
+        },
+        {
             "name": "webconsol/handlebars.php",
             "version": "dev-master",
             "version_normalized": "dev-master",
             "source": {
                 "type": "git",
                 "url": "https://github.com/WEBCONSOL/handlebars.git",
-                "reference": "cfd8eee9e1e447b62c286eaa1130c57c9eb39ca9"
+                "reference": "8c5dd574502fec6cbee950bf278b325500ca9656"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/WEBCONSOL/handlebars/zipball/cfd8eee9e1e447b62c286eaa1130c57c9eb39ca9",
-                "reference": "cfd8eee9e1e447b62c286eaa1130c57c9eb39ca9",
+                "url": "https://api.github.com/repos/WEBCONSOL/handlebars/zipball/8c5dd574502fec6cbee950bf278b325500ca9656",
+                "reference": "8c5dd574502fec6cbee950bf278b325500ca9656",
                 "shasum": ""
             },
             "require": {
-                "php": ">=7.2"
+                "php": ">=7.1"
             },
-            "time": "2021-01-06T15:53:00+00:00",
+            "time": "2021-01-06T15:59:15+00:00",
             "default-branch": true,
             "type": "library",
             "installation-source": "source",
@@ -395,18 +469,18 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/WEBCONSOL/php-hbs-helpers.git",
-                "reference": "2d673b3ae34008ccde82ce04906c58ade71a2db8"
+                "reference": "6008e355027df528306d6c17ca64ac1dbfdd6d8a"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/WEBCONSOL/php-hbs-helpers/zipball/2d673b3ae34008ccde82ce04906c58ade71a2db8",
-                "reference": "2d673b3ae34008ccde82ce04906c58ade71a2db8",
+                "url": "https://api.github.com/repos/WEBCONSOL/php-hbs-helpers/zipball/6008e355027df528306d6c17ca64ac1dbfdd6d8a",
+                "reference": "6008e355027df528306d6c17ca64ac1dbfdd6d8a",
                 "shasum": ""
             },
             "require": {
-                "php": ">=7.2"
+                "php": ">=7.1"
             },
-            "time": "2021-01-06T15:53:17+00:00",
+            "time": "2021-01-06T15:59:25+00:00",
             "default-branch": true,
             "type": "library",
             "installation-source": "source",

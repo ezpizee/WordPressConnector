@@ -24,6 +24,7 @@
     "webconsol/handlebars.php": "dev-master",
     "webconsol/php-hbs-helpers": "dev-master",
     "mashape/unirest-php": "^3.0",
-    "lcobucci/jwt": "^3.4"
+    "lcobucci/jwt": "^3.4",
+    "masterminds/html5": "2.x-dev"
   }
 }

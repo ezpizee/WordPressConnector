@@ -6,7 +6,7 @@
     'aliases' => 
     array (
     ),
-    'reference' => '12348a67bff223294f8ebde7e4fd23b2f5e22362',
+    'reference' => 'c34c027f8a3eb39606655a666b551beb3ad98767',
     'name' => 'ezpizee/php-libs',
   ),
   'versions' => 
@@ -19,7 +19,7 @@
       array (
         0 => '9999999-dev',
       ),
-      'reference' => 'cb65798a0af4fdb7a8dfedd7c23ffa447797a2e1',
+      'reference' => 'cc3c6bfa35ae4b2e310a616958d3a5de85583e07',
     ),
     'ezpizee/contextprocessor' => 
     array (
@@ -29,7 +29,7 @@
       array (
         0 => '9999999-dev',
       ),
-      'reference' => '2d1944232b0336d42bd857daead7a6643e1c075d',
+      'reference' => '05f5a33dfd9952622c9daedbed1a0330183c2048',
     ),
     'ezpizee/microservices-client' => 
     array (
@@ -39,7 +39,7 @@
       array (
         0 => '9999999-dev',
       ),
-      'reference' => 'f88bc30705d552c37f99b819bfe6fd956afece73',
+      'reference' => '44c071ac9f8a2a128e23f99d6e7f6793561f63e5',
     ),
     'ezpizee/php-libs' => 
     array (
@@ -48,7 +48,7 @@
       'aliases' => 
       array (
       ),
-      'reference' => '12348a67bff223294f8ebde7e4fd23b2f5e22362',
+      'reference' => 'c34c027f8a3eb39606655a666b551beb3ad98767',
     ),
     'ezpizee/utils' => 
     array (
@@ -58,7 +58,7 @@
       array (
         0 => '9999999-dev',
       ),
-      'reference' => 'e73642b6927b926e28d7d5818ebe96eb9c004720',
+      'reference' => '71fef1c6852ba7900d14f3ca5cf469bf200e2a49',
     ),
     'lcobucci/jwt' => 
     array (
@@ -78,6 +78,15 @@
       ),
       'reference' => '842c0f242dfaaf85f16b72e217bf7f7c19ab12cb',
     ),
+    'masterminds/html5' => 
+    array (
+      'pretty_version' => '2.x-dev',
+      'version' => '2.9999999.9999999.9999999-dev',
+      'aliases' => 
+      array (
+      ),
+      'reference' => 'cadcfaaa13153e0e8eb92c49a53e140cf1a85dea',
+    ),
     'webconsol/handlebars.php' => 
     array (
       'pretty_version' => 'dev-master',
@@ -86,7 +95,7 @@
       array (
         0 => '9999999-dev',
       ),
-      'reference' => 'cfd8eee9e1e447b62c286eaa1130c57c9eb39ca9',
+      'reference' => '8c5dd574502fec6cbee950bf278b325500ca9656',
     ),
     'webconsol/php-hbs-helpers' => 
     array (
@@ -96,7 +105,7 @@
       array (
         0 => '9999999-dev',
       ),
-      'reference' => '2d673b3ae34008ccde82ce04906c58ade71a2db8',
+      'reference' => '6008e355027df528306d6c17ca64ac1dbfdd6d8a',
     ),
   ),
 );

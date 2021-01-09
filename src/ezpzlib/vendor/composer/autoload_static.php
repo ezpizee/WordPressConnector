@@ -13,6 +13,10 @@ class ComposerStaticInit71437e9a752949ff232404692d8051c5
     );
 
     public static $prefixLengthsPsr4 = array (
+        'M' => 
+        array (
+            'Masterminds\\' => 12,
+        ),
         'L' => 
         array (
             'Lcobucci\\JWT\\' => 13,
@@ -20,6 +24,10 @@ class ComposerStaticInit71437e9a752949ff232404692d8051c5
     );
 
     public static $prefixDirsPsr4 = array (
+        'Masterminds\\' => 
+        array (
+            0 => __DIR__ . '/..' . '/masterminds/html5/src',
+        ),
         'Lcobucci\\JWT\\' => 
         array (
             0 => __DIR__ . '/..' . '/lcobucci/jwt/src',
