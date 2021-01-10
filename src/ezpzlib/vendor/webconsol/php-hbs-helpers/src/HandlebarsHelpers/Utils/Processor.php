@@ -22,7 +22,7 @@ class Processor
         'clientlib' => 'dataSlyClientlib'
     ];
     private $numExecuted = 0;
-    private $maxExec = 2;
+    private $maxExec = 10;
     private $tmpl = '';
     private $context = [];
 
@@ -36,6 +36,7 @@ class Processor
         $this->preProcessingFormat();
         $this->processSlyDOM();
         $this->changeToken();
+        $this->processAssetTag();
         $tmpl = $this->tmpl;
         $this->tmpl = '';
     }
@@ -192,6 +193,30 @@ class Processor
                     Hbs::HBS_TOKENS[0].$match[1].Hbs::HBS_TOKENS[1],
                     $this->tmpl
                 );
+            }
+        }
+    }
+
+    private function processAssetTag()
+    : void
+    {
+        $patterns = '/\<(a|img)(.[^\=]*)(src|href)\=(\\\'|\")(.[^\"]*)(\\\'|\")(.*)data-render-asset\=(\\\'|\")(image|file)(\\\'|\")([^\>]*)>/';
+        $matches = PregUtil::getMatches($patterns, $this->tmpl);
+        if (!empty($matches)) {
+            //Debugger::pre($matches);
+            $renderPage = (isset($this->context['renderPage']) ? $this->context['renderPage'] : Hbs::getGlobalContextParam('renderPage'));
+            foreach ($matches as $match) {
+                if (!PathUtil::isExternal($match[4])) {
+                    $replace = str_replace(
+                        implode('', [$match[3],'=',$match[4],$match[5],$match[6]]),
+                        implode('', [$match[3],'=',$match[4],$renderPage.'&'.$match[9].'Path='.$match[5],$match[6]]),
+                        $match[0]);
+                    $this->tmpl = str_replace(
+                        $match[0],
+                        $replace,
+                        $this->tmpl
+                    );
+                }
             }
         }
     }

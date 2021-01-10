@@ -26,6 +26,8 @@ class Hbs
 
     public static function getGlobalContext(): array {return self::$globalContext;}
 
+    public static function getGlobalContextParam(string $key) {return isset(self::$globalContext[$key]) ? self::$globalContext[$key] : null;}
+
     public final static function getExt(): string {return self::$ext;}
 
     public final static function setTokens(array $tokens): void {self::$tokens = $tokens;}

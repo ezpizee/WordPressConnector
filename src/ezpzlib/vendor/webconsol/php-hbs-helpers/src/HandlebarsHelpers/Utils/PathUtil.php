@@ -1,6 +1,6 @@
 <?php
 
-namespace Ezpizee\Utils;
+namespace HandlebarsHelpers\Utils;
 
 final class PathUtil
 {
