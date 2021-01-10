@@ -182,9 +182,9 @@ class ApiClient
         }
         return [
             'fileFieldName' => $fileFieldName,
-            'filename' => $_FILES[$fileFieldName]['tmp_name'],
-            'mimetype' => $_FILES[$fileFieldName]['type'],
-            'postname' => $_FILES[$fileFieldName]['name']
+            'filename' => sanitize_file_name($_FILES[$fileFieldName]['tmp_name']),
+            'mimetype' => sanitize_mime_type($_FILES[$fileFieldName]['type']),
+            'postname' => sanitize_file_name($_FILES[$fileFieldName]['name'])
         ];
     }
 }
