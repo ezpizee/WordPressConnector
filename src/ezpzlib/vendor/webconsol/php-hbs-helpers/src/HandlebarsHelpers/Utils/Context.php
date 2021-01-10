@@ -3,12 +3,15 @@
 namespace HandlebarsHelpers\Utils;
 
 use Handlebars\Context as BaseContext;
+use Handlebars\SafeString;
 use Handlebars\StringWrapper;
 use HandlebarsHelpers\Hbs;
 use InvalidArgumentException;
 
 class Context extends BaseContext
 {
+    private $defaultGX2CMSVarReturnValue = 'gx2cms_not_found';
+
     public function __construct($context)
     {
         parent::__construct($context);
@@ -20,9 +23,10 @@ class Context extends BaseContext
             return (string)$variableName;
         }
         $variableName = trim($variableName);
-        $stringLiteral = $this->stringLiteral($variableName);
-        if (!empty($stringLiteral)) {
-            return $stringLiteral;
+
+        $gx2cmsVarVal = $this->getGX2CMSSpecificContext($variableName, $strict);
+        if ($gx2cmsVarVal !== $this->defaultGX2CMSVarReturnValue) {
+            return $gx2cmsVarVal;
         }
 
         $level = 0;
@@ -173,7 +177,22 @@ class Context extends BaseContext
         return $value;
     }
 
-    private function stringLiteral(string $variable): string
+    private function getGX2CMSSpecificContext($variable, $strict=false)
+    {
+        if (is_string($variable) && !empty($variable)) {
+            $v = $this->stringLiteral($variable, $strict);
+            if ($v !== $this->defaultGX2CMSVarReturnValue) {
+                return $v;
+            }
+            $v = $this->stringNotCondition($variable, $strict);
+            if ($v !== $this->defaultGX2CMSVarReturnValue) {
+                return $v;
+            }
+        }
+        return $this->defaultGX2CMSVarReturnValue;
+    }
+
+    private function stringLiteral(string $variable, $strict=false): string
     {
         if (substr($variable,0,1) === "'") {
             if (strpos($variable, '@ i18n') !== false) {
@@ -189,6 +208,15 @@ class Context extends BaseContext
             }
             return substr($variable, 1, strlen($variable)-2);
         }
-        return '';
+        return $this->defaultGX2CMSVarReturnValue;
+    }
+
+    private function stringNotCondition(string $variable, $strict=false): string
+    {
+        if (substr($variable, 0, 1) === '!') {
+            $variable = substr($variable, 1, strlen($variable) - 1);
+            die($variable);
+        }
+        return $this->defaultGX2CMSVarReturnValue;
     }
 }

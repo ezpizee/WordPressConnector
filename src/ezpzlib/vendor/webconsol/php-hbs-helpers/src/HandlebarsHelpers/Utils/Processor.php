@@ -5,6 +5,7 @@ namespace HandlebarsHelpers\Utils;
 use DOMAttr;
 use DOMDocumentFragment;
 use DOMElement;
+use DOMNodeList;
 use DOMText;
 use HandlebarsHelpers\Hbs;
 use RuntimeException;
@@ -21,16 +22,8 @@ class Processor
         'clientlib' => 'dataSlyClientlib'
     ];
     private $numExecuted = 0;
-    private $maxExec = 5;
+    private $maxExec = 2;
     private $tmpl = '';
-    /**
-     * @var DOMElement
-     */
-    private $head;
-    /**
-     * @var DOMElement
-     */
-    private $body;
     private $context = [];
 
     public function __construct() {}
@@ -41,49 +34,72 @@ class Processor
         $this->context = $context;
         $this->tmpl = $tmpl;
         $this->preProcessingFormat();
-        if (Html::hasHead($this->tmpl)) {
-            $this->processHTMLDoc();
-            $this->loadPageClientlib();
-        }
-        else {
-            $this->processHTMLFragment();
-        }
+        $this->processSlyDOM();
         $this->changeToken();
         $tmpl = $this->tmpl;
         $this->tmpl = '';
     }
 
-    private function processHTMLDoc()
+    private function processSlyDOM()
     : void
     {
         $html5 = new HTML5();
-        $doc = $html5->parse($this->tmpl);
+        if (Html::hasHead($this->tmpl)) {
+            if ($this->numExecuted === 0) {
+                $this->loadPageClientlib();
+            }
+            $doc = $html5->parse($this->tmpl);
+        }
+        else {
+            $doc = $html5->parseFragment($this->tmpl);
+        }
         if ($html5->hasErrors()) {
             throw new RuntimeException(json_encode($html5->getErrors()), 500);
         }
-        $this->head = $doc->getElementsByTagName('head')->item(0);
-        $this->body = $doc->getElementsByTagName('body')->item(0);
-        $this->walkThroughDOM($this->head);
-        $this->walkThroughDOM($this->body);
+        if (!($doc instanceof DOMDocumentFragment)) {
+            $nodeList = $doc->getElementsByTagName('sly');
+            $this->walkThroughSly($nodeList);
+        }
+        else {
+            $this->walkThroughDOM($doc);
+        }
         $this->tmpl = $html5->saveHTML($doc);
-        $this->posProcessingFormat();
+        $this->postProcessingFormat();
         if (strpos($this->tmpl, '<sly ') !== false && $this->numExecuted < $this->maxExec) {
             $this->numExecuted++;
-            $this->processHTMLDoc();
+            $this->processSlyDOM();
         }
     }
 
-    private function processHTMLFragment()
+    private function walkThroughSly(DOMNodeList &$nodeList)
     : void
     {
-        $html5 = new HTML5();
-        $doc = $html5->parseFragment($this->tmpl);
-        $this->walkThroughDOM($doc);
-        $this->tmpl = $html5->saveHTML($doc);
-        $this->posProcessingFormat();
-        if (strpos($this->tmpl, '<sly ') !== false && $this->numExecuted < $this->maxExec) {
-            $this->numExecuted++;
-            $this->processHTMLFragment();
+        if (!empty($nodeList) && $nodeList->length > 0) {
+            foreach ($nodeList as $node) {
+                if ($node instanceof DOMElement) {
+
+                    if ($node instanceof DOMElement) {
+                        $this->processDOMElement($node);
+                    }
+                    else if ($node instanceof DOMDocumentFragment) {
+                        $this->processDOMDocumentFragment($node);
+                    }
+
+                    if ($node->hasChildNodes()) {
+                        foreach ($node->childNodes as $childNode) {
+                            if ($childNode instanceof DOMDocumentFragment) {
+                                print_r($childNode);
+                            }
+                            else if ($childNode instanceof DOMElement) {
+                                $this->walkThroughSly($childNode->getElementsByTagName('sly'));
+                            }
+                            else if ($childNode instanceof DOMText) {
+                                $this->processDOMText($childNode);
+                            }
+                        }
+                    }
+                }
+            }
         }
     }
 
@@ -155,6 +171,18 @@ class Processor
     private function changeToken()
     : void
     {
+        if (strpos($this->tmpl, ' @ context=') !== false) {
+            $patterns = ['/\\{', '(.[^\\@\\}]*)', ' @ context\\=\'(.[^\\\']*)\'', '\\}/'];
+            $matches = PregUtil::getMatches(implode('', $patterns), $this->tmpl);
+            if (!empty($matches)) {
+                foreach ($matches as $match) {
+                    if (sizeof($match) > 2) {
+                        $replace = '{{'.$match[1].'}}';
+                        $this->tmpl = str_replace($match[0], $replace, $this->tmpl);
+                    }
+                }
+            }
+        }
         $patterns = ['/',Hbs::getOpenToken(), '(.[^\\}]*)', Hbs::getCloseToken(),'/'];
         $matches = PregUtil::getMatches(implode('', $patterns), $this->tmpl);
         if (!empty($matches)) {
@@ -173,9 +201,11 @@ class Processor
     {
         if (!empty($dom)) {
             $varName = $dom->hasAttribute($this->attrs['varname']) ? $dom->getAttribute($this->attrs['varname']) : '';
-            $use = Hbs::HBS_TOKENS[0].'#use \''.$attr->value.'\' '."'".$varName."'".Hbs::HBS_TOKENS[1].
+            $source = Hbs::HBS_TOKENS[0].'#use \''.$attr->value.'\' '."'".$varName."'".Hbs::HBS_TOKENS[1].
                 DOMQuery::getContent($dom).Hbs::HBS_TOKENS[0].'/use'.Hbs::HBS_TOKENS[1];
-            DOMQuery::replaceDOMElementWithDOMText($dom->parentNode, $dom, $use);
+            $ele = $dom->parentNode->ownerDocument->createElement('gx2cms', $source);
+            $dom->parentNode->replaceChild($ele, $dom);
+            //DOMQuery::replaceDOMElementWithDOMText($dom->parentNode, $dom, $source);
         }
     }
 
@@ -183,11 +213,18 @@ class Processor
     : void
     {
         if (!empty($dom)) {
-            $test = Hbs::HBS_TOKENS[0].'#if '.
-                $this->removeToken($attr->value).
+            $fun = ['#if ','/if'];
+            $val = $this->removeToken($attr->value);
+            if (substr($val, 0, 1) === '!') {
+                $val = substr($val, 1, strlen($val)-1);
+                $fun = ['#ifnot ', '/ifnot'];
+            }
+            $source = Hbs::HBS_TOKENS[0].$fun[0].$val.
                 Hbs::HBS_TOKENS[1].
-                DOMQuery::getContent($dom).Hbs::HBS_TOKENS[0].'/if'.Hbs::HBS_TOKENS[1];
-            DOMQuery::replaceDOMElementWithDOMText($dom->parentNode, $dom, $test);
+                DOMQuery::getContent($dom).Hbs::HBS_TOKENS[0].$fun[1].Hbs::HBS_TOKENS[1];
+            $ele = $dom->parentNode->ownerDocument->createElement('gx2cms', $source);
+            $dom->parentNode->replaceChild($ele, $dom);
+            //DOMQuery::replaceDOMElementWithDOMText($dom->parentNode, $dom, $source);
         }
     }
 
@@ -195,16 +232,18 @@ class Processor
     : void
     {
         if (!empty($dom)) {
-            $list = Hbs::HBS_TOKENS[0].'#foreach '.
+            $source = Hbs::HBS_TOKENS[0].'#foreach '.
                 $this->removeToken($attr->value).
                 Hbs::HBS_TOKENS[1].
                 DOMQuery::getContent($dom).Hbs::HBS_TOKENS[0].'/foreach'.Hbs::HBS_TOKENS[1];
-            $list = str_replace(
+            $source = str_replace(
                 ['${itemList.index', '${item.'],
                 ['${@index', '${this.'],
-                $list
+                $source
             );
-            DOMQuery::replaceDOMElementWithDOMText($dom->parentNode, $dom, $list);
+            $ele = $dom->parentNode->ownerDocument->createElement('gx2cms', $source);
+            $dom->parentNode->replaceChild($ele, $dom);
+            //DOMQuery::replaceDOMElementWithDOMText($dom->parentNode, $dom, $source);
         }
     }
 
@@ -216,7 +255,9 @@ class Processor
             $dataModel = $dom->hasAttribute('data-model') ? "'".$dom->getAttribute('data-model')."'" : '';
             $source = Hbs::HBS_TOKENS[0].'#resource '.$this->removeToken($resourceValue).
                 ($dataModel?' '.$dataModel:'').Hbs::HBS_TOKENS[1];
-            DOMQuery::replaceDOMElementWithDOMText($dom->parentNode, $dom, $source);
+            $ele = $dom->parentNode->ownerDocument->createElement('gx2cms', $source);
+            $dom->parentNode->replaceChild($ele, $dom);
+            //DOMQuery::replaceDOMElementWithDOMText($dom->parentNode, $dom, $source);
         }
     }
 
@@ -229,7 +270,9 @@ class Processor
                 $resourceValue = "'".$resourceValue."'";
             }
             $source = Hbs::HBS_TOKENS[0].'#include '.$this->removeToken($resourceValue).Hbs::HBS_TOKENS[1];
-            DOMQuery::replaceDOMElementWithDOMText($dom->parentNode, $dom, $source);
+            $ele = $dom->parentNode->ownerDocument->createElement('gx2cms', $source);
+            $dom->parentNode->replaceChild($ele, $dom);
+            //DOMQuery::replaceDOMElementWithDOMText($dom->parentNode, $dom, $source);
         }
     }
 
@@ -240,7 +283,9 @@ class Processor
             $dataType = $dom->getAttribute('data-type');
             $resourceValue = str_replace("'", '"', $attr->value);
             $source = Hbs::HBS_TOKENS[0].'#clientlib '.$this->removeToken($resourceValue).' '.$dataType.Hbs::HBS_TOKENS[1];
-            DOMQuery::replaceDOMElementWithDOMText($dom->parentNode, $dom, $source);
+            $ele = $dom->parentNode->ownerDocument->createElement('gx2cms', $source);
+            $dom->parentNode->replaceChild($ele, $dom);
+            // DOMQuery::replaceDOMElementWithDOMText($dom->parentNode, $dom, $source);
         }
     }
 
@@ -276,12 +321,12 @@ class Processor
         }
     }
 
-    private function posProcessingFormat()
+    private function postProcessingFormat()
     : void
     {
         $this->tmpl = str_replace(
-            ['&lt;sly ', '&lt;/sly&gt;', '&gt;', '&lt;'],
-            ['<sly ', '</sly>', '>', '<'],
+            ['&lt;sly ', '&lt;/sly&gt;', '&gt;', '&lt;', '<gx2cms>', '</gx2cms>'],
+            ['<sly ', '</sly>', '>', '<', '', ''],
             $this->tmpl
         );
     }

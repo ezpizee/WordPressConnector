@@ -37,12 +37,42 @@ class DOMQuery
         }
     }
 
-    public static function replaceDOMElementWithDOMText(DOMNode $parent, DOMElement $oldNode, $source)
+    public static function replaceDOMElementWithDOMText(DOMNode $parent, DOMElement &$oldNode, $source)
     : void
     {
         if (!empty($parent)) {
+            /*$doc = new DOMDocument();
+            libxml_use_internal_errors(true);
+            $doc->loadHTML($source);
+            libxml_clear_errors();
+            $body = $doc->getElementsByTagName('body')->item(0);
+            if ($body->hasChildNodes()) {
+                if ($body->childNodes->count() > 1) {
+                    foreach ($body->childNodes as $childNode) {
+                        $node = self::createNewNodeFromParent($parent, $childNode);
+                        $parent->insertBefore($node, $oldNode);;
+                    }
+                    $parent->removeChild($oldNode);
+                }
+                else {
+                    $node = self::createNewNodeFromParent($parent, $body->firstChild);
+                    if (!empty($node)) {
+                        $parent->replaceChild($node, $oldNode);
+                    }
+                }
+            }*/
             $node = $parent->ownerDocument->createTextNode($source);
             $parent->replaceChild($node, $oldNode);
         }
+    }
+
+    private static function createNewNodeFromParent(DOMNode &$parentNode, $newNode) {
+        if ($newNode instanceof DOMElement) {
+            return $parentNode->ownerDocument->createElement($newNode->tagName, $newNode->nodeValue);
+        }
+        else if ($newNode instanceof DOMText) {
+            return $parentNode->ownerDocument->createTextNode($newNode->nodeValue);
+        }
+        return null;
     }
 }

@@ -305,8 +305,9 @@ class Parser {
     protected function fixTags($tags) {
         // move @ tags out of variable namespace
         foreach ($tags as &$tag) {
-            if (!empty($tag) && substr($tag, 0, 1) == $this->lessc->vPrefix)
+            if (!empty($tag) && substr($tag, 0, 1) == $this->lessc->vPrefix) {
                 $tag[0] = $this->lessc->mPrefix;
+            }
         }
         return $tags;
     }

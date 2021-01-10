@@ -30,16 +30,19 @@ class IncludeHelper extends RequireHelper
         $parsedArgs = $template->parseArguments($args);
         if (sizeof($parsedArgs) > 0) {
             $path = Hbs::getTmplDir().DIRECTORY_SEPARATOR.$parsedArgs[0];
-            $model = [];
-            $currentPage = $context->get('currentPage');
-            if (!empty($currentPage)) {
-                $model = ['currentPage' => $currentPage];
+            if (file_exists($path)) {
+                $model = [];
+                $currentPage = $context->get('currentPage');
+                if (!empty($currentPage)) {
+                    $model = ['currentPage' => $currentPage];
+                }
+                $properties = $context->get('properties');
+                if (!empty($properties)) {
+                    $model['properties'] = $properties;
+                }
+                return new StringWrapper(Hbs::render(file_get_contents($path), $model, Hbs::getTmplDir()));
             }
-            $properties = $context->get('properties');
-            if (!empty($properties)) {
-                $model['properties'] = $properties;
-            }
-            return new StringWrapper(Hbs::render($path, $model, Hbs::getTmplDir()));
+            return new StringWrapper($parsedArgs[0]);
         }
         return new Error(self::class . ' requires 2 arguments, '.sizeof($parsedArgs).' was provided');
     }

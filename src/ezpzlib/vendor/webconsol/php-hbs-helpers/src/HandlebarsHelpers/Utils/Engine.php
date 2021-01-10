@@ -3,6 +3,7 @@
 namespace HandlebarsHelpers\Utils;
 
 use Handlebars\Handlebars;
+use HandlebarsHelpers\Hbs;
 use HandlebarsHelpers\Loader;
 
 class Engine extends Handlebars
@@ -18,7 +19,9 @@ class Engine extends Handlebars
         if (file_exists($template)) {
             $template = file_get_contents($template);
         }
-        (new Processor())->process($template, $context);
+        if (Hbs::HBS_TOKENS[0] !== Hbs::getOpenToken() && Hbs::HBS_TOKENS[1] !== Hbs::getCloseToken()) {
+            (new Processor())->process($template, $context);
+        }
         return $this->loadTemplate($template)->render(new Context($context));
     }
 }
