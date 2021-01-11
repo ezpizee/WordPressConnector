@@ -36,9 +36,54 @@ class Processor
         $this->preProcessingFormat();
         $this->processSlyDOM();
         $this->changeToken();
-        $this->processAssetTag();
+        self::processAssetTag($this->tmpl, $this->context);
+        self::processAssetInCSS($this->tmpl, $this->context);
         $tmpl = $this->tmpl;
         $this->tmpl = '';
+    }
+
+    public static function processAssetInCSS(string &$tmpl, array $context)
+    : void
+    {
+        $patterns = '/url\((\\\'|\")(.[^\)]*)(\\\'|\")\)/';
+        $matches = PregUtil::getMatches($patterns, $tmpl);
+        if (!empty($matches)) {
+            $key = 2;
+            $renderPage = (isset($context['renderPage']) ? $context['renderPage'] : Hbs::getGlobalContextParam('renderPage'));
+            foreach ($matches as $match) {
+                if (!PathUtil::isExternal($match[$key])) {
+                    $tmpl = str_replace(
+                        $match[$key],
+                        $renderPage.'&imagePath='.$match[$key],
+                        $tmpl
+                    );
+                }
+            }
+        }
+    }
+
+    public static function processAssetTag(string &$tmpl, array $context)
+    : void
+    {
+        $patterns = '/\<(a|img)(.[^\=]*)(src|href)\=(\\\'|\")(.[^\"]*)(\\\'|\")(.*)data-render-asset\=(\\\'|\")(image|file)(\\\'|\")([^\>]*)>/';
+        $matches = PregUtil::getMatches($patterns, $tmpl);
+        if (!empty($matches)) {
+            $key = 5;
+            $renderPage = (isset($context['renderPage']) ? $context['renderPage'] : Hbs::getGlobalContextParam('renderPage'));
+            foreach ($matches as $match) {
+                if (!PathUtil::isExternal($match[$key])) {
+                    $replace = str_replace(
+                        implode('', [$match[3],'=',$match[4],$match[$key],$match[6]]),
+                        implode('', [$match[3],'=',$match[4],$renderPage.'&'.$match[9].'Path='.$match[$key],$match[6]]),
+                        $match[0]);
+                    $tmpl = str_replace(
+                        $match[0],
+                        $replace,
+                        $tmpl
+                    );
+                }
+            }
+        }
     }
 
     private function processSlyDOM()
@@ -193,30 +238,6 @@ class Processor
                     Hbs::HBS_TOKENS[0].$match[1].Hbs::HBS_TOKENS[1],
                     $this->tmpl
                 );
-            }
-        }
-    }
-
-    private function processAssetTag()
-    : void
-    {
-        $patterns = '/\<(a|img)(.[^\=]*)(src|href)\=(\\\'|\")(.[^\"]*)(\\\'|\")(.*)data-render-asset\=(\\\'|\")(image|file)(\\\'|\")([^\>]*)>/';
-        $matches = PregUtil::getMatches($patterns, $this->tmpl);
-        if (!empty($matches)) {
-            //Debugger::pre($matches);
-            $renderPage = (isset($this->context['renderPage']) ? $this->context['renderPage'] : Hbs::getGlobalContextParam('renderPage'));
-            foreach ($matches as $match) {
-                if (!PathUtil::isExternal($match[4])) {
-                    $replace = str_replace(
-                        implode('', [$match[3],'=',$match[4],$match[5],$match[6]]),
-                        implode('', [$match[3],'=',$match[4],$renderPage.'&'.$match[9].'Path='.$match[5],$match[6]]),
-                        $match[0]);
-                    $this->tmpl = str_replace(
-                        $match[0],
-                        $replace,
-                        $this->tmpl
-                    );
-                }
             }
         }
     }
