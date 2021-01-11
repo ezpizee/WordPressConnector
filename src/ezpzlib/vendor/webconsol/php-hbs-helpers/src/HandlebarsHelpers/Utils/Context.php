@@ -7,10 +7,11 @@ use Handlebars\SafeString;
 use Handlebars\StringWrapper;
 use HandlebarsHelpers\Hbs;
 use InvalidArgumentException;
+use ParseError;
 
 class Context extends BaseContext
 {
-    private $defaultGX2CMSVarReturnValue = 'gx2cms_not_found';
+    const DEFAULT_GX2CMS_VAR_RETURN_VALUE = 'gx2cms_not_found';
 
     public function __construct($context)
     {
@@ -25,7 +26,7 @@ class Context extends BaseContext
         $variableName = trim($variableName);
 
         $gx2cmsVarVal = $this->getGX2CMSSpecificContext($variableName, $strict);
-        if ($gx2cmsVarVal !== $this->defaultGX2CMSVarReturnValue) {
+        if ($gx2cmsVarVal !== self::DEFAULT_GX2CMS_VAR_RETURN_VALUE) {
             return $gx2cmsVarVal;
         }
 
@@ -89,18 +90,106 @@ class Context extends BaseContext
             }
         }
         else {
-            $chunks = $this->_splitVariableName($variableName);
-            foreach ($chunks as $chunk) {
-                if (is_string($current) and $current == '') {
-                    return $current;
-                }
-                $current = $this->_findVariableInContext($current, $chunk, $strict);
-            }
+            $current = self::searchVariableValueInContext($variableName, $current, $strict);
         }
         return $current;
     }
 
-    private function _splitVariableName($variableName)
+    private function getGX2CMSSpecificContext($variable, $strict=false)
+    {
+        if (is_string($variable) && !empty($variable)) {
+            $v = $this->stringLiteral($variable, $strict);
+            if ($v !== self::DEFAULT_GX2CMS_VAR_RETURN_VALUE) {
+                return $v;
+            }
+            $v = $this->stringNotCondition($variable, $strict);
+            if ($v !== self::DEFAULT_GX2CMS_VAR_RETURN_VALUE) {
+                return $v;
+            }
+            $exp = explode('?', $variable);
+            if (sizeof($exp) > 1) {
+                $exp[1] = explode(':', $exp[1]);
+                if (sizeof($exp[1]) > 1) {
+                    $v = $this->parseConditionalStatement($variable, $strict);
+                    if ($v !== self::DEFAULT_GX2CMS_VAR_RETURN_VALUE) {
+                        return $v;
+                    }
+                }
+            }
+        }
+        return self::DEFAULT_GX2CMS_VAR_RETURN_VALUE;
+    }
+
+    private function stringLiteral(string $variable, $strict=false): string
+    {
+        if (substr($variable,0,1) === "'") {
+            if (strpos($variable, '@ i18n') !== false) {
+                $exp = explode('@', $variable);
+                $variable = trim($exp[0]);
+                $variable = substr($variable, 1, strlen($variable)-2);
+                $data = Hbs::getGlobalContext();
+                if (isset($data['global'])) {
+                    $data = $data['global'];
+                }
+                $lang = isset($data['lang']) ? $data['lang'] : 'en';
+                if (isset($data['i18n']) && isset($data['i18n'][$lang]) && isset($data['i18n'][$lang][$variable])) {
+                    return $data['i18n'][$lang][$variable];
+                }
+                return $variable;
+            }
+            return substr($variable, 1, strlen($variable)-2);
+        }
+        return self::DEFAULT_GX2CMS_VAR_RETURN_VALUE;
+    }
+
+    private function stringNotCondition(string $variable, $strict=false): string
+    {
+        if (substr($variable, 0, 1) === '!') {
+            $variable = substr($variable, 1, strlen($variable) - 1);
+            die($variable);
+        }
+        return self::DEFAULT_GX2CMS_VAR_RETURN_VALUE;
+    }
+
+    private function parseConditionalStatement(string $variable, $strict)
+    {
+        $pattern = '/(\s\?\s|\s\:\s|\(|\))/';
+        $newVarName = preg_replace($pattern, "\n", $variable);
+        $list = explode("\n", $newVarName);
+        $context = current($this->stack);
+        $patterns = [];
+        $replaces = [];
+        foreach ($list as $val) {
+            $val = trim($val);
+            if (!empty($val) && !is_numeric($val) && $val !== 'true' && $val !== 'false' && $val !== 'null' &&
+                $val[0] !== "'" && $val[0] !== '"'
+            ) {
+                $newVal = Context::searchVariableValueInContext($val, $context);
+                if ($newVal !== $context) {
+                    if (!is_numeric($newVal) && !is_null($newVal) && !is_bool($newVal)) {
+                        $newVal = "'".$newVal."'";
+                    }
+                    if (!in_array($newVal, $replaces)) {
+                        $patterns[] = $val;
+                        $replaces[] = $newVal===true
+                            ? 'true' : ($newVal === false
+                                ? 'false' : (empty($newVal)
+                                    ? "''" : $newVal));
+                    }
+                }
+            }
+        }
+
+        $newVarName = str_replace($patterns, $replaces, $variable);
+        try {
+            return eval('return '.$newVarName.';');
+        }
+        catch (ParseError $e) {
+            return Context::DEFAULT_GX2CMS_VAR_RETURN_VALUE;
+        }
+    }
+
+    public static function splitVariableName($variableName)
     {
         $bad_chars = preg_quote(self::NOT_VALID_NAME_CHARS, '/');
         $bad_seg_chars = preg_quote(self::NOT_VALID_SEGMENT_NAME_CHARS, '/');
@@ -142,7 +231,7 @@ class Context extends BaseContext
         return $chunks;
     }
 
-    private function _findVariableInContext($variable, $inside, $strict = false)
+    public static function findVariableInContext($variable, $inside, $strict = false)
     {
         $value = null;
         if (($inside !== '0' && empty($inside)) || ($inside == 'this')) {
@@ -177,46 +266,15 @@ class Context extends BaseContext
         return $value;
     }
 
-    private function getGX2CMSSpecificContext($variable, $strict=false)
+    public static function searchVariableValueInContext($variableName, $context, $strict=false)
     {
-        if (is_string($variable) && !empty($variable)) {
-            $v = $this->stringLiteral($variable, $strict);
-            if ($v !== $this->defaultGX2CMSVarReturnValue) {
-                return $v;
+        $chunks = self::splitVariableName($variableName);
+        foreach ($chunks as $chunk) {
+            if (is_string($context) && empty($context)) {
+                return $context;
             }
-            $v = $this->stringNotCondition($variable, $strict);
-            if ($v !== $this->defaultGX2CMSVarReturnValue) {
-                return $v;
-            }
+            $context = self::findVariableInContext($context, $chunk, $strict);
         }
-        return $this->defaultGX2CMSVarReturnValue;
-    }
-
-    private function stringLiteral(string $variable, $strict=false): string
-    {
-        if (substr($variable,0,1) === "'") {
-            if (strpos($variable, '@ i18n') !== false) {
-                $exp = explode('@', $variable);
-                $variable = trim($exp[0]);
-                $variable = substr($variable, 1, strlen($variable)-2);
-                $data = Hbs::getGlobalContext();
-                $lang = isset($data['lang']) ? $data['lang'] : 'en';
-                if (isset($data['i18n']) && isset($data['i18n'][$lang]) && isset($data['i18n'][$lang][$variable])) {
-                    return $data['i18n'][$lang][$variable];
-                }
-                return $variable;
-            }
-            return substr($variable, 1, strlen($variable)-2);
-        }
-        return $this->defaultGX2CMSVarReturnValue;
-    }
-
-    private function stringNotCondition(string $variable, $strict=false): string
-    {
-        if (substr($variable, 0, 1) === '!') {
-            $variable = substr($variable, 1, strlen($variable) - 1);
-            die($variable);
-        }
-        return $this->defaultGX2CMSVarReturnValue;
+        return $context;
     }
 }

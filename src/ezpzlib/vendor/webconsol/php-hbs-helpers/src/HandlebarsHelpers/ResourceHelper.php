@@ -35,7 +35,7 @@ class ResourceHelper implements Helper
         if (sizeof($parsedArgs) === 2) {
             $path = Hbs::absPartialPath($parsedArgs[0]);
             $model = Hbs::getModel($parsedArgs[0], $parsedArgs[1]);
-            $model = array_merge($model, Hbs::getGlobalContext());
+            $model = array_merge(Hbs::getGlobalContext(), $model);
             return new StringWrapper(Hbs::render($path, $model, Hbs::getTmplDir()));
         }
         return new Error(self::class . ' requires 2 arguments, '.sizeof($parsedArgs).' was provided');

@@ -19,8 +19,10 @@ class Engine extends Handlebars
         if (file_exists($template)) {
             $template = file_get_contents($template);
         }
-        if (Hbs::HBS_TOKENS[0] !== Hbs::getOpenToken() && Hbs::HBS_TOKENS[1] !== Hbs::getCloseToken()) {
-            (new Processor())->process($template, $context);
+        $processor = '\\HandlebarsHelpers\\Processors\\'.Hbs::getProcessor();
+        $processor = new $processor();
+        if (method_exists($processor, 'process')) {
+            $processor->process($template, $context);
         }
         return $this->loadTemplate($template)->render(new Context($context));
     }

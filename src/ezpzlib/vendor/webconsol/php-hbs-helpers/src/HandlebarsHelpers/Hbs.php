@@ -9,6 +9,7 @@ class Hbs
 {
     const HBS_TOKENS = ['{{', '}}'];
     protected static $tokens = ['{{', '}}'];
+    protected static $processor = 'Processor';
     protected static $ext = '.hbs';
     private static $tmplDir = '';
     private static $globalContext = [];
@@ -29,6 +30,10 @@ class Hbs
     public static function getGlobalContextParam(string $key) {return isset(self::$globalContext[$key]) ? self::$globalContext[$key] : null;}
 
     public final static function getExt(): string {return self::$ext;}
+
+    public final static function getProcessor(): string {return self::$processor;}
+
+    public final static function setProcessor(string $s): void {self::$processor = $s;}
 
     public final static function setTokens(array $tokens): void {self::$tokens = $tokens;}
 

@@ -1,6 +1,6 @@
 <?php
 
-namespace HandlebarsHelpers\Utils;
+namespace HandlebarsHelpers\Processors;
 
 use DOMAttr;
 use DOMDocumentFragment;
@@ -8,9 +8,16 @@ use DOMElement;
 use DOMNodeList;
 use DOMText;
 use HandlebarsHelpers\Hbs;
+use HandlebarsHelpers\Utils\ClientlibManager;
+use HandlebarsHelpers\Utils\Comparator;
+use HandlebarsHelpers\Utils\Context;
+use HandlebarsHelpers\Utils\DOMQuery;
+use HandlebarsHelpers\Utils\Html;
+use HandlebarsHelpers\Utils\HTML5;
+use HandlebarsHelpers\Utils\PregUtil;
 use RuntimeException;
 
-class Processor
+class GX2CMS extends Processor
 {
     private $attrs = [
         'varname'=>'data-var-name',
@@ -26,8 +33,6 @@ class Processor
     private $tmpl = '';
     private $context = [];
 
-    public function __construct() {}
-
     public function process(string &$tmpl, array $context)
     : void
     {
@@ -40,50 +45,6 @@ class Processor
         self::processAssetInCSS($this->tmpl, $this->context);
         $tmpl = $this->tmpl;
         $this->tmpl = '';
-    }
-
-    public static function processAssetInCSS(string &$tmpl, array $context)
-    : void
-    {
-        $patterns = '/url\((\\\'|\")(.[^\)]*)(\\\'|\")\)/';
-        $matches = PregUtil::getMatches($patterns, $tmpl);
-        if (!empty($matches)) {
-            $key = 2;
-            $renderPage = (isset($context['renderPage']) ? $context['renderPage'] : Hbs::getGlobalContextParam('renderPage'));
-            foreach ($matches as $match) {
-                if (!PathUtil::isExternal($match[$key])) {
-                    $tmpl = str_replace(
-                        $match[$key],
-                        $renderPage.'&imagePath='.$match[$key],
-                        $tmpl
-                    );
-                }
-            }
-        }
-    }
-
-    public static function processAssetTag(string &$tmpl, array $context)
-    : void
-    {
-        $patterns = '/\<(a|img)(.[^\=]*)(src|href)\=(\\\'|\")(.[^\"]*)(\\\'|\")(.*)data-render-asset\=(\\\'|\")(image|file)(\\\'|\")([^\>]*)>/';
-        $matches = PregUtil::getMatches($patterns, $tmpl);
-        if (!empty($matches)) {
-            $key = 5;
-            $renderPage = (isset($context['renderPage']) ? $context['renderPage'] : Hbs::getGlobalContextParam('renderPage'));
-            foreach ($matches as $match) {
-                if (!PathUtil::isExternal($match[$key])) {
-                    $replace = str_replace(
-                        implode('', [$match[3],'=',$match[4],$match[$key],$match[6]]),
-                        implode('', [$match[3],'=',$match[4],$renderPage.'&'.$match[9].'Path='.$match[$key],$match[6]]),
-                        $match[0]);
-                    $tmpl = str_replace(
-                        $match[0],
-                        $replace,
-                        $tmpl
-                    );
-                }
-            }
-        }
     }
 
     private function processSlyDOM()
@@ -259,8 +220,13 @@ class Processor
     : void
     {
         if (!empty($dom)) {
-            $fun = ['#if ','/if'];
             $val = $this->removeToken($attr->value);
+            $result = Comparator::dataSlyTest($val, $this->context);
+            if ($result !== Context::DEFAULT_GX2CMS_VAR_RETURN_VALUE)
+            {
+                $val = $result;
+            }
+            $fun = ['#if ','/if'];
             if (substr($val, 0, 1) === '!') {
                 $val = substr($val, 1, strlen($val)-1);
                 $fun = ['#ifnot ', '/ifnot'];

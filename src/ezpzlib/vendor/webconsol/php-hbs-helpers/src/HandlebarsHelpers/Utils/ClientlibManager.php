@@ -281,7 +281,7 @@ class ClientlibManager
             }
         }
         else {
-            new Error('ITEM_NOT_FOUND', 404);
+            new Error(ClientlibManager::class.' could not find: '.$this->pathInfo->getPath(), 404);
         }
     }
 
