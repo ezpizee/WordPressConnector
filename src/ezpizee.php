@@ -38,6 +38,7 @@ if ( !function_exists( 'add_action' ) ) {
 }
 
 if (!defined('EZPIZEE_DS')) {define('EZPIZEE_DS', DIRECTORY_SEPARATOR);}
+if (!defined('WPINC')) {define( 'WPINC', 'wp-includes' );}
 
 function ezpizee_get_wp_root()
 {
@@ -80,8 +81,8 @@ if (isset($_GET['page']) &&
     if (strpos(filter_input(INPUT_SERVER, 'SCRIPT_FILENAME', FILTER_SANITIZE_STRING),
             \EzpizeeWordPress\EzpizeeAdmin::WP_PAGE_ADMIN) !== false) {
         if (!function_exists( 'wp_create_nonce')) {
-            include_once EZPIZEE_WP_ROOT_DIR . EZPIZEE_DS . 'wp-includes' . EZPIZEE_DS . 'pluggable.php';
-            include_once EZPIZEE_WP_ROOT_DIR . EZPIZEE_DS . 'wp-includes' . EZPIZEE_DS . 'user.php';
+            include_once EZPIZEE_WP_ROOT_DIR . EZPIZEE_DS . WPINC . EZPIZEE_DS . 'pluggable.php';
+            include_once EZPIZEE_WP_ROOT_DIR . EZPIZEE_DS . WPINC . EZPIZEE_DS . 'user.php';
         }
         \EzpizeeWordPress\EzpizeeAdmin::displayPortalPage();
     }
