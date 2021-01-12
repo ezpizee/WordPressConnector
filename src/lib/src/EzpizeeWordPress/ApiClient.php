@@ -112,10 +112,10 @@ class ApiClient
             $response = $this->client->get($this->uri);
         }
         else if ($this->method === 'POST') {
-            if (isset($this->contentType) && $this->contentType === 'application/json') {
+            if ($this->contentType === 'application/json' || strpos($this->contentType, 'application/json') !== false) {
                 $response = $this->client->post($this->uri, $this->body);
             }
-            else if (isset($this->contentType) && strpos($this->contentType, 'multipart/form-data') !== false) {
+            if ($this->contentType === 'multipart/form-data' || strpos($this->contentType, 'multipart/form-data') !== false) {
                 if ($this->hasFileUploaded()) {
                     $response = $this->submitFormDataWithFile();
                 }
