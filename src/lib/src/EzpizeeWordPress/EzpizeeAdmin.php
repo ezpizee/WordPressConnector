@@ -10,8 +10,8 @@ use RuntimeException;
 class EzpizeeAdmin
 {
     const NONCE = EzpzClientConfig::NONCE;
-    const ADMIN_PORTAL = "ezpizee-portal";
-    const ADMIN_INSTALL = "ezpizee-install";
+    const ADMIN_PORTAL = "ezpizee_portal";
+    const ADMIN_INSTALL = "ezpizee_install";
     const WP_PAGE_GENERAL_OPTIONS = 'options-general.php';
     const WP_PAGE_ADMIN = 'admin.php';
     private static $configFormData = [];
