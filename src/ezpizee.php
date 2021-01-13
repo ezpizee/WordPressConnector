@@ -40,26 +40,23 @@ if ( !function_exists( 'add_action' ) ) {
 if (!defined('EZPIZEE_DS')) {define('EZPIZEE_DS', DIRECTORY_SEPARATOR);}
 if (!defined('WPINC')) {define( 'WPINC', 'wp-includes' );}
 
-function ezpizee_get_wp_root()
-{
-    $base = dirname(__FILE__);
-    if (@file_exists(dirname(dirname($base))."/wp-config.php")) {
-        $path = dirname(dirname($base));
+function ezpizee_get_home_path() {
+    $home    = set_url_scheme( get_option( 'home' ), 'http' );
+    $siteurl = set_url_scheme( get_option( 'siteurl' ), 'http' );
+
+    if ( ! empty( $home ) && 0 !== strcasecmp( $home, $siteurl ) ) {
+        $wp_path_rel_to_home = str_ireplace( $home, '', $siteurl ); /* $siteurl - $home */
+        $pos                 = strripos( str_replace( EZPIZEE_DS.EZPIZEE_DS, EZPIZEE_DS, $_SERVER['SCRIPT_FILENAME'] ), trailingslashit( $wp_path_rel_to_home ) );
+        $home_path           = substr( $_SERVER['SCRIPT_FILENAME'], 0, $pos );
+        $home_path           = trailingslashit( $home_path );
+    } else {
+        $home_path = ABSPATH;
     }
-    else if (@file_exists(dirname(dirname(dirname($base)))."/wp-config.php")) {
-        $path = dirname(dirname(dirname($base)));
-    }
-    else {
-        $path = '';
-    }
-    if (!empty($path))
-    {
-        $path = str_replace("\\", EZPIZEE_DS, $path);
-    }
-    return $path;
+
+    return rtrim(str_replace( EZPIZEE_DS.EZPIZEE_DS, EZPIZEE_DS, $home_path ), EZPIZEE_DS);
 }
 
-define('EZPIZEE_WP_ROOT_DIR', ezpizee_get_wp_root());
+define('EZPIZEE_WP_ROOT_DIR', ezpizee_get_home_path());
 define('EZPIZEE_WP_VERSION', '0.0.1');
 define('EZPIZEE_MINIMUM_WP_VERSION', '4.0');
 define('EZPIZEE_PLUGIN_DIR', __DIR__);
