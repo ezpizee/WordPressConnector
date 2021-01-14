@@ -22,6 +22,7 @@ use Handlebars\Context;
 use Handlebars\StringWrapper;
 use Handlebars\Template;
 use HandlebarsHelpers\Exception\Error;
+use HandlebarsHelpers\Processors\Processor;
 
 class IncludeHelper extends RequireHelper
 {
@@ -40,7 +41,11 @@ class IncludeHelper extends RequireHelper
                 if (!empty($properties)) {
                     $model['properties'] = $properties;
                 }
-                return new StringWrapper(Hbs::render(file_get_contents($path), $model, Hbs::getTmplDir()));
+                $html = Hbs::render(file_get_contents($path), $model, Hbs::getTmplDir());
+                Processor::processAssetTag($html, $model);
+                Processor::processAssetInCSS($html, $model);
+                Processor::processHref($html,  $model);
+                return new StringWrapper($html);
             }
             return new StringWrapper($parsedArgs[0]);
         }

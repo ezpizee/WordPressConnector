@@ -18,8 +18,13 @@ class Context extends BaseContext
         parent::__construct($context);
     }
 
+    public function getStack(): array {return $this->stack;}
+
     public function get($variableName, $strict = false)
     {
+        if ($variableName === '_stack') {
+            return $this->getStack();
+        }
         if ($variableName instanceof StringWrapper) {
             return (string)$variableName;
         }

@@ -23,6 +23,7 @@ use Handlebars\Helper;
 use Handlebars\StringWrapper;
 use Handlebars\Template;
 use HandlebarsHelpers\Exception\Error;
+use HandlebarsHelpers\Processors\Processor;
 
 class ResourceHelper implements Helper
 {
@@ -36,7 +37,12 @@ class ResourceHelper implements Helper
             $path = Hbs::absPartialPath($parsedArgs[0]);
             $model = Hbs::getModel($parsedArgs[0], $parsedArgs[1]);
             $model = array_merge(Hbs::getGlobalContext(), $model);
-            return new StringWrapper(Hbs::render($path, $model, Hbs::getTmplDir()));
+
+            $html = Hbs::render(file_get_contents($path), $model, Hbs::getTmplDir());
+            Processor::processAssetTag($html, $model);
+            Processor::processAssetInCSS($html, $model);
+            Processor::processHref($html,  $model);
+            return new StringWrapper($html);
         }
         return new Error(self::class . ' requires 2 arguments, '.sizeof($parsedArgs).' was provided');
     }

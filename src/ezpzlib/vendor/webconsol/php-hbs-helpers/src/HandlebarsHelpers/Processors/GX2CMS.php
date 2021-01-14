@@ -43,6 +43,7 @@ class GX2CMS extends Processor
         $this->changeToken();
         self::processAssetTag($this->tmpl, $this->context);
         self::processAssetInCSS($this->tmpl, $this->context);
+        self::processHref($this->tmpl, $this->context);
         $tmpl = $this->tmpl;
         $this->tmpl = '';
     }

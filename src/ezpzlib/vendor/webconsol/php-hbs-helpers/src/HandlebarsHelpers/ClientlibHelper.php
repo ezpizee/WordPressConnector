@@ -23,6 +23,7 @@ use Handlebars\Helper;
 use Handlebars\StringWrapper;
 use Handlebars\Template;
 use HandlebarsHelpers\Exception\Error;
+use HandlebarsHelpers\Processors\Processor;
 use HandlebarsHelpers\Utils\ClientlibManager;
 
 class ClientlibHelper implements Helper
@@ -46,7 +47,12 @@ class ClientlibHelper implements Helper
                 }
             }
             $output[] = $type === 'css' ? '</style>' : '</script>';
-            return new StringWrapper(sizeof($output) > 2 ? implode('', $output) : '');
+            $clientLibSource = sizeof($output) > 2 ? implode('', $output) : '';
+            $model = current($context->get('_stack'));
+            Processor::processAssetTag($clientLibSource, is_array($model) ? $model : []);
+            Processor::processAssetInCSS($clientLibSource, is_array($model) ? $model : []);
+            Processor::processHref($clientLibSource, is_array($model) ? $model : []);
+            return new StringWrapper($clientLibSource);
         }
         return new Error(self::class . ' requires 2 arguments, '.sizeof($parsedArgs).' was provided');
     }

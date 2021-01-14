@@ -5,12 +5,43 @@ namespace HandlebarsHelpers\Processors;
 use HandlebarsHelpers\Hbs;
 use HandlebarsHelpers\Utils\PathUtil;
 use HandlebarsHelpers\Utils\PregUtil;
+use HandlebarsHelpers\Utils\StringUtil;
 
 class Processor
 {
     public function __construct() {}
 
     public function process(string &$tmpl, array $context): void {}
+
+    public static final function processHref(string &$tmpl, array $context)
+    : void
+    {
+        $patterns = '/\<([^\>]*)data-href-page\=(\\\'|\")(.[^\\\'\"]*)(\\\'|\")([^\>]*)\>/';
+        $matches = PregUtil::getMatches($patterns, $tmpl);
+        if (!empty($matches)) {
+            $key = 3;
+            $renderPage = (isset($context['renderPage']) ? $context['renderPage'] : Hbs::getGlobalContextParam('renderPage'));
+            foreach ($matches as $match) {
+                if ($match[$key] !== '#' &&
+                    !PathUtil::isExternal($match[$key]) &&
+                    StringUtil::startsWith($match[$key], '{{') === false &&
+                    StringUtil::startsWith($match[$key], '${') === false &&
+                    StringUtil::startsWith($match[$key], "javascript:") === false &&
+                    StringUtil::startsWith($match[$key], "data:") === false &&
+                    StringUtil::startsWith($match[$key], $renderPage) === false
+                ) {
+                    $tmpl = str_replace(
+                        [
+                            'href='.$match[$key-1].$match[$key].$match[$key+1],
+                            ' data-href-page='.$match[$key-1].$match[$key].$match[$key+1]
+                        ],
+                        ['href='.$match[$key-1].$renderPage.'&page='.$match[$key].$match[$key+1], ''],
+                        $tmpl
+                    );
+                }
+            }
+        }
+    }
 
     public static final function processAssetInCSS(string &$tmpl, array $context)
     : void
@@ -21,7 +52,10 @@ class Processor
             $key = 2;
             $renderPage = (isset($context['renderPage']) ? $context['renderPage'] : Hbs::getGlobalContextParam('renderPage'));
             foreach ($matches as $match) {
-                if (!PathUtil::isExternal($match[$key])) {
+                if (!PathUtil::isExternal($match[$key]) &&
+                    StringUtil::startsWith($match[$key], "data:") === false &&
+                    StringUtil::startsWith($match[$key], $renderPage) === false
+                ) {
                     $tmpl = str_replace(
                         $match[$key],
                         $renderPage.'&imagePath='.$match[$key],
