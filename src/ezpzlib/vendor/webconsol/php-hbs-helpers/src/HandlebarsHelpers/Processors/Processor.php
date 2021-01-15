@@ -3,6 +3,7 @@
 namespace HandlebarsHelpers\Processors;
 
 use HandlebarsHelpers\Hbs;
+use HandlebarsHelpers\Utils\Debugger;
 use HandlebarsHelpers\Utils\PathUtil;
 use HandlebarsHelpers\Utils\PregUtil;
 use HandlebarsHelpers\Utils\StringUtil;
@@ -75,14 +76,20 @@ class Processor
             $key = 5;
             $renderPage = (isset($context['renderPage']) ? $context['renderPage'] : Hbs::getGlobalContextParam('renderPage'));
             foreach ($matches as $match) {
-                if (!PathUtil::isExternal($match[$key])) {
+                if (!PathUtil::isExternal($match[$key]) &&
+                    StringUtil::startsWith($match[$key], '{{') === false &&
+                    StringUtil::startsWith($match[$key], '${') === false &&
+                    StringUtil::startsWith($match[$key], "data:") === false &&
+                    StringUtil::startsWith($match[$key], $renderPage) === false
+                ) {
                     $replace = str_replace(
                         implode('', [$match[3],'=',$match[4],$match[$key],$match[6]]),
-                        implode('', [$match[3],'=',$match[4],$renderPage.'&'.$match[9].'Path='.$match[$key],$match[6]]),
-                        $match[0]);
+                         implode('', [$match[3],'=',$match[4],$renderPage.'&'.$match[9].'Path='.$match[$key],$match[6]]),
+                        $match[0]
+                    );
                     $tmpl = str_replace(
-                        $match[0],
-                        $replace,
+                        [$match[0], ' data-render-asset='.$match[8].$match[9].$match[10]],
+                        [$replace, ''],
                         $tmpl
                     );
                 }

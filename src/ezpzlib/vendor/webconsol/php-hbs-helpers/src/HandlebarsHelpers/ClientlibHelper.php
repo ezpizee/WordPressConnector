@@ -35,23 +35,44 @@ class ClientlibHelper implements Helper
         if (sizeof($parsedArgs) === 2) {
             $type = $parsedArgs[1];
             $libs = json_decode($parsedArgs[0], true);
-            $output = [($type === 'css' ? '<style type="text/css">' : '<script type="text/javascript">')];
+            $clientLibSource = [];
             if (!empty($libs)) {
-                foreach ($libs as $lib) {
-                    $root = Hbs::getTmplDir();
-                    $q = $lib.'.'.$type;
-                    $clientLib = new ClientlibManager($root, $q);
-                    if (!empty($clientLib->getContent())) {
-                        $output[] = $clientLib->getContent();
+                $renderPage = $context->get('renderPage');
+                if ($renderPage) {
+                    if ($type === 'css') {
+                        foreach ($libs as $lib) {
+                            $clientLibSource[] = '<link href="'.$renderPage.'&clientlib='.rawurlencode($lib).
+                                '&type='.$type.'" type="text/css" rel="stylesheet" />';
+                        }
                     }
+                    else if ($type === 'js') {
+                        foreach ($libs as $lib) {
+                            $clientLibSource[] = '<script src="'.$renderPage.'&clientlib='.rawurlencode($lib).
+                                '&type='.$type.'" type="text/javascript"></script>';
+                        }
+                    }
+                    $clientLibSource = implode('', $clientLibSource);
                 }
+                else {
+                    $clientLibSource = [($type === 'css' ? '<style type="text/css">' : '<script type="text/javascript">')];
+                    foreach ($libs as $lib) {
+                        $root = Hbs::getTmplDir();
+                        $q = $lib . '.' . $type;
+                        $clientLib = new ClientlibManager($root, $q);
+                        if (!empty($clientLib->getContent())) {
+                            $clientLibSource[] = $clientLib->getContent();
+                        }
+                    }
+                    $clientLibSource[] = $type === 'css' ? '</style>' : '</script>';
+                    $clientLibSource = implode('', $clientLibSource);
+                }
+                $model = current($context->get('_stack'));
+                Processor::processAssetInCSS($clientLibSource, is_array($model) ? $model : []);
+                Processor::processHref($clientLibSource, is_array($model) ? $model : []);
             }
-            $output[] = $type === 'css' ? '</style>' : '</script>';
-            $clientLibSource = sizeof($output) > 2 ? implode('', $output) : '';
-            $model = current($context->get('_stack'));
-            Processor::processAssetTag($clientLibSource, is_array($model) ? $model : []);
-            Processor::processAssetInCSS($clientLibSource, is_array($model) ? $model : []);
-            Processor::processHref($clientLibSource, is_array($model) ? $model : []);
+            else {
+                $clientLibSource = implode('', $clientLibSource);
+            }
             return new StringWrapper($clientLibSource);
         }
         return new Error(self::class . ' requires 2 arguments, '.sizeof($parsedArgs).' was provided');

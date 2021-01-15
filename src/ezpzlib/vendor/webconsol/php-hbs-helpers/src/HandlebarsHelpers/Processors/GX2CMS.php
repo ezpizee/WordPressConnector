@@ -294,8 +294,11 @@ class GX2CMS extends Processor
     {
         if (!empty($dom) && $dom->hasAttribute('data-type')) {
             $dataType = $dom->getAttribute('data-type');
+            if ($dataType !== 'css' && !$dataType === 'js') {
+                throw new RuntimeException('Invalid data-type for your clienlib include', 500);
+            }
             $resourceValue = str_replace("'", '"', $attr->value);
-            $source = Hbs::HBS_TOKENS[0].'#clientlib '.$this->removeToken($resourceValue).' '.$dataType.Hbs::HBS_TOKENS[1];
+            $source = Hbs::HBS_TOKENS[0] . '#clientlib ' . $this->removeToken($resourceValue) . ' ' . $dataType . Hbs::HBS_TOKENS[1];
             $ele = $dom->parentNode->ownerDocument->createElement('gx2cms', $source);
             $dom->parentNode->replaceChild($ele, $dom);
             // DOMQuery::replaceDOMElementWithDOMText($dom->parentNode, $dom, $source);
@@ -355,19 +358,40 @@ class GX2CMS extends Processor
     {
         $dir = Hbs::getRenderFileClientlibDir();
         if (file_exists($dir)) {
-            $lib = str_replace(Hbs::getTmplDir(), '', $dir).'.css';
-            $clientlib = new ClientlibManager(Hbs::getTmplDir(), $lib);
-            if (!empty($clientlib->getContent())) {
-                $this->tmpl = str_replace('</head>',
-                    '<style type="text/css">'.$clientlib->getContent().'</style></head>',
-                    $this->tmpl);
+            $renderPage = $this->context['renderPage'];
+            if (file_exists($dir.GX2CMS_DS.'css')) {
+                if ($renderPage) {
+                    $lib = str_replace(Hbs::getTmplDir(), '', $dir);
+                    $this->tmpl = str_replace('</head>',
+                        '<link href="'.$renderPage.'&clientlib='.rawurlencode($lib).'&type=css" type="text/css"  rel="stylesheet"/></head>',
+                        $this->tmpl);
+                }
+                else {
+                    $lib = str_replace(Hbs::getTmplDir(), '', $dir).'.css';
+                    $clientlib = new ClientlibManager(Hbs::getTmplDir(), $lib);
+                    if (!empty($clientlib->getContent())) {
+                        $this->tmpl = str_replace('</head>',
+                            '<style type="text/css">'.$clientlib->getContent().'</style></head>',
+                            $this->tmpl);
+                    }
+                }
             }
-            $lib = str_replace(Hbs::getTmplDir(), '', $dir).'.js';
-            $clientlib = new ClientlibManager(Hbs::getTmplDir(), $lib);
-            if (!empty($clientlib->getContent())) {
-                $this->tmpl = str_replace('</head>',
-                    '<script type="text/javascript">'.$clientlib->getContent().'</script></head>',
-                    $this->tmpl);
+            if (file_exists($dir.GX2CMS_DS.'js')) {
+                if ($renderPage) {
+                    $lib = str_replace(Hbs::getTmplDir(), '', $dir);
+                    $this->tmpl = str_replace('</head>',
+                        '<script src="'.$renderPage.'&clientlib='.rawurlencode($lib).'&type=js" type="text/javascript"></script></head>',
+                        $this->tmpl);
+                }
+                else {
+                    $lib = str_replace(Hbs::getTmplDir(), '', $dir).'.js';
+                    $clientlib = new ClientlibManager(Hbs::getTmplDir(), $lib);
+                    if (!empty($clientlib->getContent())) {
+                        $this->tmpl = str_replace('</head>',
+                            '<script type="text/javascript">'.$clientlib->getContent().'</script></head>',
+                            $this->tmpl);
+                    }
+                }
             }
         }
     }
