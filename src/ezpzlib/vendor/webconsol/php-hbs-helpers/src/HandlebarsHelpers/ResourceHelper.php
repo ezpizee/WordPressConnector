@@ -35,13 +35,18 @@ class ResourceHelper implements Helper
         }
         if (sizeof($parsedArgs) === 2) {
             $path = Hbs::absPartialPath($parsedArgs[0]);
-            $model = Hbs::getModel($parsedArgs[0], $parsedArgs[1]);
-            $model = array_merge(Hbs::getGlobalContext(), $model);
-
-            $html = Hbs::render(file_get_contents($path), $model, Hbs::getTmplDir());
-            Processor::processAssetTag($html, $model);
-            Processor::processAssetInCSS($html, $model);
-            Processor::processHref($html,  $model);
+            if (file_exists($path)) {
+                $model = Hbs::getModel($parsedArgs[0], $parsedArgs[1]);
+                $model = array_merge(Hbs::getGlobalContext(), $model);
+                $html = Hbs::render(file_get_contents($path), $model, Hbs::getTmplDir());
+                Processor::processAssetTag($html, $model);
+                Processor::processAssetInCSS($html, $model);
+                Processor::processHref($html,  $model);
+            }
+            else {
+                $html = '<div style="background:#efefef;border:1px solid red;padding:10px;">'.
+                    'Resource <b>'.$path.'</b> does not exist.</div>';
+            }
             return new StringWrapper($html);
         }
         return new Error(self::class . ' requires 2 arguments, '.sizeof($parsedArgs).' was provided');

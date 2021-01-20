@@ -53,6 +53,13 @@ class ComposerStaticInit71437e9a752949ff232404692d8051c5
                 0 => __DIR__ . '/..' . '/webconsol/handlebars.php/src',
             ),
         ),
+        'G' => 
+        array (
+            'GX2CMS\\Project' => 
+            array (
+                0 => __DIR__ . '/..' . '/gx2cms/project/src',
+            ),
+        ),
         'E' => 
         array (
             'Ezpizee\\Utils' => 

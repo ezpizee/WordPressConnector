@@ -1,0 +1,27 @@
+{
+  "name": "gx2cms/project",
+  "description": "For all GX2CMS Project",
+  "homepage": "https://github.com/ezpizee/gx2cms-project",
+  "type": "library",
+  "minimum-stability": "dev",
+  "prefer-stable": true,
+  "license": "MIT",
+  "authors": [
+    {
+      "name": "Pang Khon",
+      "email": "khon.pang@ezpizee.com"
+    },
+    {
+      "name": "Sothea Nim",
+      "email": "sothea.nim@ezpizee.com.com"
+    }
+  ],
+  "require": {
+    "php": ">=7.1"
+  },
+  "autoload": {
+    "psr-0": {
+      "GX2CMS\\Project": "src/"
+    }
+  }
+}

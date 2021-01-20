@@ -23,5 +23,7 @@ maven-eclipse.xml
 .DS_Store
 *.jar
 
+composer.lock
+
 /cache
 !/cache/index.html

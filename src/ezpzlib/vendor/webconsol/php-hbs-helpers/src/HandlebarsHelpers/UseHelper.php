@@ -28,6 +28,17 @@ class UseHelper implements Helper
     public function execute(Template $template, Context $context, $args, $source)
     {
         $parsedArgs = $template->parseArguments($args);
-        return new StringWrapper(json_encode($parsedArgs));
+        if (sizeof($parsedArgs) === 2) {
+            $resourcePath = (string)$parsedArgs[0];
+            $varName = (string)$parsedArgs[1];
+            $obj = [$varName => Hbs::getBundleModel($resourcePath)];
+            $context->push($obj);
+            $html = $template->render($obj);
+        }
+        else {
+            $html = '<div style="background:#efefef;border:1px solid red;padding:10px;">'.
+                'Invalid arguments for use api ('.self::class.')</div>';
+        }
+        return new StringWrapper($html);
     }
 }

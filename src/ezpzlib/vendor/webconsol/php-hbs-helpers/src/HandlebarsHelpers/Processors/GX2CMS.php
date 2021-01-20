@@ -11,6 +11,7 @@ use HandlebarsHelpers\Hbs;
 use HandlebarsHelpers\Utils\ClientlibManager;
 use HandlebarsHelpers\Utils\Comparator;
 use HandlebarsHelpers\Utils\Context;
+use HandlebarsHelpers\Utils\Debugger;
 use HandlebarsHelpers\Utils\DOMQuery;
 use HandlebarsHelpers\Utils\Html;
 use HandlebarsHelpers\Utils\HTML5;
@@ -209,8 +210,12 @@ class GX2CMS extends Processor
     {
         if (!empty($dom)) {
             $varName = $dom->hasAttribute($this->attrs['varname']) ? $dom->getAttribute($this->attrs['varname']) : '';
+            //$namespace = str_replace(['${',"'",'"'], '', $attr->value);
+            //$this->context[$varName] = Hbs::getBundleModel($namespace);
+            $html = DOMQuery::getContent($dom);
+            (new GX2CMS())->process($html, $this->context);
             $source = Hbs::HBS_TOKENS[0].'#use \''.$attr->value.'\' '."'".$varName."'".Hbs::HBS_TOKENS[1].
-                DOMQuery::getContent($dom).Hbs::HBS_TOKENS[0].'/use'.Hbs::HBS_TOKENS[1];
+                $html.Hbs::HBS_TOKENS[0].'/use'.Hbs::HBS_TOKENS[1];
             $ele = $dom->parentNode->ownerDocument->createElement('gx2cms', $source);
             $dom->parentNode->replaceChild($ele, $dom);
             //DOMQuery::replaceDOMElementWithDOMText($dom->parentNode, $dom, $source);
@@ -278,9 +283,15 @@ class GX2CMS extends Processor
     : void
     {
         if (!empty($dom)) {
-            $resourceValue = $attr->value;
+            $resourceValue = trim($attr->value);
+            if (empty($resourceValue)) {
+                throw new RuntimeException('Include path cannot be empty for data-sly-include');
+            }
             if (substr($resourceValue, 0, 1) !== "'") {
                 $resourceValue = "'".$resourceValue."'";
+            }
+            if (strpos($resourceValue, '${') !== false || strpos($resourceValue, '{{') !== false) {
+                $this->replaceVarWithItsContextValue($resourceValue);
             }
             $source = Hbs::HBS_TOKENS[0].'#include '.$this->removeToken($resourceValue).Hbs::HBS_TOKENS[1];
             $ele = $dom->parentNode->ownerDocument->createElement('gx2cms', $source);
@@ -391,6 +402,19 @@ class GX2CMS extends Processor
                             '<script type="text/javascript">'.$clientlib->getContent().'</script></head>',
                             $this->tmpl);
                     }
+                }
+            }
+        }
+    }
+
+    private function replaceVarWithItsContextValue(string &$str) {
+        $patterns = ['/',Hbs::getOpenToken(), '(.[^\\}]*)', Hbs::getCloseToken(),'/'];
+        $matches = PregUtil::getMatches(implode('', $patterns), $str);
+        if (!empty($matches)) {
+            foreach ($matches as $match) {
+                if (sizeof($match) === 2) {
+                    $s = Context::searchVariableValueInContext($match[1], $this->context);
+                    $str = str_replace($match[0], $s, $str);
                 }
             }
         }

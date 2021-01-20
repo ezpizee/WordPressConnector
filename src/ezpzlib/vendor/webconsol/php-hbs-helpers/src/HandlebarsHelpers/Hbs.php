@@ -2,8 +2,11 @@
 
 namespace HandlebarsHelpers;
 
+use GX2CMS\Project\Model;
 use HandlebarsHelpers\Utils\Engine;
 use HandlebarsHelpers\Utils\PartialLoader;
+use JsonSerializable;
+use RuntimeException;
 
 class Hbs
 {
@@ -101,29 +104,48 @@ class Hbs
         return $file;
     }
 
+    public static function getBundleModel(string $namespace, bool $throwError=true)
+    : array
+    {
+        $ds = DIRECTORY_SEPARATOR;
+        $dot = '.';
+        $file = self::$tmplDir.$ds.'bundle'.$ds.str_replace($dot, $ds, $namespace).'.php';
+        $class = str_replace($dot, '\\', $namespace);
+        if (file_exists($file)) {
+            if (!class_exists($class, false)) {
+                include $file;
+            }
+        }
+        if (class_exists($class, false)) {
+            $classObject = new $class();
+            if ($classObject instanceof Model) {
+                $classObject->process();
+                return $classObject->jsonSerialize();
+            }
+            else if (method_exists($classObject, 'jsonSerialize')) {
+                return $classObject->jsonSerialize();
+            }
+            else {
+                die('Class '.$class.' needs to implement '.(JsonSerializable::class));
+            }
+        }
+        else if ($throwError === true) {
+            throw new RuntimeException(' Namespace '.$namespace.' does not exist.', 500);
+        }
+        return [];
+    }
+
     public static function getModel(string $filename, string $selector)
     : array
     {
         $ds = DIRECTORY_SEPARATOR;
         if (!empty($selector)) {
-            $dot = '.';
-            $namespace = self::$tmplDir.$ds.'bundle'.$ds.str_replace($dot, $ds, $selector).'.php';
-            $class = str_replace($dot, '\\', $selector);
-            if (file_exists($namespace) && !class_exists($class, false)) {
-                include_once $namespace;
-            }
-            if (class_exists($class, false)) {
-                $classObject = new $class();
-                if (method_exists($classObject, 'jsonSerialize')) {
-                    return $classObject->jsonSerialize();
-                }
-                else {
-                    die('Class '.$class.' needs to implement '.(\JsonSerializable::class));
-                }
+            $obj = self::getBundleModel($selector, false);
+            if (!empty($obj)) {
+                return $obj;
             }
         }
-        $filename = dirname(self::absPartialPath($filename)).$ds.'model'.$ds.
-            (empty($selector)?'properties':$selector).'.json';
+        $filename = dirname(self::absPartialPath($filename)).$ds.'model'.$ds.(empty($selector)?'properties':$selector).'.json';
         if (file_exists($filename)) {
             return json_decode(file_get_contents($filename), true);
         }

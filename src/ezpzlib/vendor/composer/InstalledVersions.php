@@ -29,7 +29,7 @@ private static $installed = array (
     'aliases' => 
     array (
     ),
-    'reference' => 'c34c027f8a3eb39606655a666b551beb3ad98767',
+    'reference' => '855d14f25e80fea0874b369e581cd262ba4b52d3',
     'name' => 'ezpizee/php-libs',
   ),
   'versions' => 
@@ -71,7 +71,7 @@ private static $installed = array (
       'aliases' => 
       array (
       ),
-      'reference' => 'c34c027f8a3eb39606655a666b551beb3ad98767',
+      'reference' => '855d14f25e80fea0874b369e581cd262ba4b52d3',
     ),
     'ezpizee/utils' => 
     array (
@@ -82,6 +82,16 @@ private static $installed = array (
         0 => '9999999-dev',
       ),
       'reference' => '71fef1c6852ba7900d14f3ca5cf469bf200e2a49',
+    ),
+    'gx2cms/project' => 
+    array (
+      'pretty_version' => 'dev-master',
+      'version' => 'dev-master',
+      'aliases' => 
+      array (
+        0 => '9999999-dev',
+      ),
+      'reference' => 'adb0e656393ad9864d6d52bafcab290d047fc586',
     ),
     'lcobucci/jwt' => 
     array (

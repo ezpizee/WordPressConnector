@@ -202,6 +202,55 @@
             "install-path": "../ezpizee/utils"
         },
         {
+            "name": "gx2cms/project",
+            "version": "dev-master",
+            "version_normalized": "dev-master",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/ezpizee/gx2cms-project.git",
+                "reference": "adb0e656393ad9864d6d52bafcab290d047fc586"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/ezpizee/gx2cms-project/zipball/adb0e656393ad9864d6d52bafcab290d047fc586",
+                "reference": "adb0e656393ad9864d6d52bafcab290d047fc586",
+                "shasum": ""
+            },
+            "require": {
+                "php": ">=7.1"
+            },
+            "time": "2021-01-20T01:23:52+00:00",
+            "default-branch": true,
+            "type": "library",
+            "installation-source": "source",
+            "autoload": {
+                "psr-0": {
+                    "GX2CMS\\Project": "src/"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Pang Khon",
+                    "email": "khon.pang@ezpizee.com"
+                },
+                {
+                    "name": "Sothea Nim",
+                    "email": "sothea.nim@ezpizee.com.com"
+                }
+            ],
+            "description": "For all GX2CMS Project",
+            "homepage": "https://github.com/ezpizee/gx2cms-project",
+            "support": {
+                "issues": "https://github.com/ezpizee/gx2cms-project/issues",
+                "source": "https://github.com/ezpizee/gx2cms-project/tree/master"
+            },
+            "install-path": "../gx2cms/project"
+        },
+        {
             "name": "lcobucci/jwt",
             "version": "3.4.x-dev",
             "version_normalized": "3.4.9999999.9999999-dev",

@@ -9,6 +9,7 @@ return array(
     'Unirest\\' => array($vendorDir . '/mashape/unirest-php/src'),
     'HandlebarsHelpers\\' => array($vendorDir . '/webconsol/php-hbs-helpers/src'),
     'Handlebars' => array($vendorDir . '/webconsol/handlebars.php/src'),
+    'GX2CMS\\Project' => array($vendorDir . '/gx2cms/project/src'),
     'Ezpizee\\Utils' => array($vendorDir . '/ezpizee/utils/src'),
     'Ezpizee\\MicroservicesClient' => array($vendorDir . '/ezpizee/microservices-client/src'),
     'Ezpizee\\ContextProcessor' => array($vendorDir . '/ezpizee/contextprocessor/src'),

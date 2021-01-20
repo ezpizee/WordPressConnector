@@ -45,9 +45,12 @@ class IncludeHelper extends RequireHelper
                 Processor::processAssetTag($html, $model);
                 Processor::processAssetInCSS($html, $model);
                 Processor::processHref($html,  $model);
-                return new StringWrapper($html);
             }
-            return new StringWrapper($parsedArgs[0]);
+            else {
+                $html = '<div style="background:#efefef;border:1px solid red;padding:10px;">'.
+                    'Resource <b>'.$path.'</b> does not exist.</div>';
+            }
+            return new StringWrapper($html);
         }
         return new Error(self::class . ' requires 2 arguments, '.sizeof($parsedArgs).' was provided');
     }
