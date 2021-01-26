@@ -66,7 +66,7 @@ class ClientlibHelper implements Helper
                     $clientLibSource[] = $type === 'css' ? '</style>' : '</script>';
                     $clientLibSource = implode('', $clientLibSource);
                 }
-                $model = current($context->get('_stack'));
+                $model = current($context->get('_context_stack'));
                 Processor::processAssetInCSS($clientLibSource, is_array($model) ? $model : []);
                 Processor::processHref($clientLibSource, is_array($model) ? $model : []);
             }

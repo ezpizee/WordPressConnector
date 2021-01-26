@@ -5,7 +5,6 @@ namespace HandlebarsHelpers;
 use GX2CMS\Project\Model;
 use HandlebarsHelpers\Utils\Engine;
 use HandlebarsHelpers\Utils\PartialLoader;
-use JsonSerializable;
 use RuntimeException;
 
 class Hbs
@@ -126,7 +125,7 @@ class Hbs
                 return $classObject->jsonSerialize();
             }
             else {
-                die('Class '.$class.' needs to implement '.(JsonSerializable::class));
+                die('Class '.$class.' needs to implement JsonSerializable');
             }
         }
         else if ($throwError === true) {

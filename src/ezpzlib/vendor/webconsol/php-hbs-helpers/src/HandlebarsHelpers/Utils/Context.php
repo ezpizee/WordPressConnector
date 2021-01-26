@@ -3,7 +3,6 @@
 namespace HandlebarsHelpers\Utils;
 
 use Handlebars\Context as BaseContext;
-use Handlebars\SafeString;
 use Handlebars\StringWrapper;
 use HandlebarsHelpers\Hbs;
 use InvalidArgumentException;
@@ -22,7 +21,7 @@ class Context extends BaseContext
 
     public function get($variableName, $strict = false)
     {
-        if ($variableName === '_stack') {
+        if ($variableName === '_context_stack') {
             return $this->getStack();
         }
         if ($variableName instanceof StringWrapper) {

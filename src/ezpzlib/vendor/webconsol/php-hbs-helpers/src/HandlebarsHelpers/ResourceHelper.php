@@ -24,31 +24,47 @@ use Handlebars\StringWrapper;
 use Handlebars\Template;
 use HandlebarsHelpers\Exception\Error;
 use HandlebarsHelpers\Processors\Processor;
+use HandlebarsHelpers\Utils\EncodingUtil;
+use HandlebarsHelpers\Utils\Logger;
 
 class ResourceHelper implements Helper
 {
     public function execute(Template $template, Context $context, $args, $source)
     {
         $parsedArgs = $template->parseArguments($args);
-        if (!isset($parsedArgs[1])) {
-            $parsedArgs[1] = 'properties';
+        $nodePath = '';
+        $resourceType = '';
+        $model = '';
+        $parsedArgs[0] = (string)$parsedArgs[0];
+        if (EncodingUtil::isBase64Encoded($parsedArgs[0])) {
+            $parsedArgs[0] = base64_decode($parsedArgs[0]);
         }
-        if (sizeof($parsedArgs) === 2) {
-            $path = Hbs::absPartialPath($parsedArgs[0]);
-            if (file_exists($path)) {
-                $model = Hbs::getModel($parsedArgs[0], $parsedArgs[1]);
-                $model = array_merge(Hbs::getGlobalContext(), $model);
-                $html = Hbs::render(file_get_contents($path), $model, Hbs::getTmplDir());
-                Processor::processAssetTag($html, $model);
-                Processor::processAssetInCSS($html, $model);
-                Processor::processHref($html,  $model);
+        if (EncodingUtil::isValidJSON($parsedArgs[0])) {
+            $obj = json_decode($parsedArgs[0], true);
+            $resourceType = isset($obj['resourceType']) ? $obj['resourceType'] : '';
+            $model = isset($obj['model']) ? $obj['model'] : 'properties';
+            if (!empty($resourceType)) {
+                $nodePath = isset($obj['nodePath']) && $obj['nodePath']
+                    ? $obj['nodePath'] : pathinfo($resourceType, PATHINFO_FILENAME);
             }
-            else {
-                $html = '<div style="background:#efefef;border:1px solid red;padding:10px;">'.
-                    'Resource <b>'.$path.'</b> does not exist.</div>';
-            }
-            return new StringWrapper($html);
         }
-        return new Error(self::class . ' requires 2 arguments, '.sizeof($parsedArgs).' was provided');
+        if (empty($resourceType) || empty($model) || empty($nodePath)) {
+            return new Error(self::class . ' Malformed arguments '.$parsedArgs[0].' was provided', 500);
+        }
+
+        $path = Hbs::absPartialPath($resourceType);
+        if (file_exists($path)) {
+            $model = Hbs::getModel($resourceType, $model);
+            $model = array_merge(Hbs::getGlobalContext(), $model);
+            $html = Hbs::render(file_get_contents($path), $model, Hbs::getTmplDir());
+            Processor::processAssetTag($html, $model);
+            Processor::processAssetInCSS($html, $model);
+            Processor::processHref($html,  $model);
+        }
+        else {
+            $html = '<div style="background:#efefef;border:1px solid red;padding:10px;">'.
+                'Resource <b>'.$path.'</b> does not exist.</div>';
+        }
+        return new StringWrapper($html);
     }
 }

@@ -31,9 +31,8 @@ class UseHelper implements Helper
         if (sizeof($parsedArgs) === 2) {
             $resourcePath = (string)$parsedArgs[0];
             $varName = (string)$parsedArgs[1];
-            $obj = [$varName => Hbs::getBundleModel($resourcePath)];
-            $context->push($obj);
-            $html = $template->render($obj);
+            $context->push([$varName => Hbs::getBundleModel($resourcePath)]);
+            $html = $template->render($context);
         }
         else {
             $html = '<div style="background:#efefef;border:1px solid red;padding:10px;">'.

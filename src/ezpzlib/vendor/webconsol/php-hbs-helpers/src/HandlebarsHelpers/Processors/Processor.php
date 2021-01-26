@@ -3,6 +3,7 @@
 namespace HandlebarsHelpers\Processors;
 
 use HandlebarsHelpers\Hbs;
+use HandlebarsHelpers\Utils\Context;
 use HandlebarsHelpers\Utils\Debugger;
 use HandlebarsHelpers\Utils\PathUtil;
 use HandlebarsHelpers\Utils\PregUtil;
@@ -10,6 +11,10 @@ use HandlebarsHelpers\Utils\StringUtil;
 
 class Processor
 {
+    protected static $ignoreList = [];
+    protected $tmpl = '';
+    protected $context = [];
+
     public function __construct() {}
 
     public function process(string &$tmpl, array $context): void {}
@@ -92,6 +97,51 @@ class Processor
                         [$replace, ''],
                         $tmpl
                     );
+                }
+            }
+        }
+    }
+
+    protected function ignore(): void {
+        $patterns = '/\<script(.[^\>]*)type\=(\"|\')text\/(x\-handlebars|x\-handlebars\-template)(\"|\')(.[^\>]*)\>/';
+        $matches = PregUtil::getMatches($patterns, $this->tmpl);
+        if (!empty($matches)) {
+            foreach ($matches as $i=>$match) {
+                $exp = explode($match[0], $this->tmpl);
+                $exp2 = explode('</script>', $exp[1]);
+                $replace = '[gx2cms-ignore-'.uniqid($i).']';
+                $pattern = $match[0].$exp2[0].'</script>';
+                self::$ignoreList[$replace] = $pattern;
+                $this->tmpl = str_replace($pattern, $replace, $this->tmpl);
+            }
+        }
+    }
+
+    public static function putBackIgnore(string &$tmpl): void {
+        if (!empty(self::$ignoreList)) {
+            foreach (self::$ignoreList as $pattern=>$html) {
+                $tmpl = str_replace($pattern, $html, $tmpl);
+                self::extractGX2CMSVars($tmpl);
+            }
+        }
+    }
+
+    private static function extractGX2CMSVars(string &$str): void
+    {
+        $patterns = ['/',Hbs::getOpenToken(), '(.[^\\}]*)', Hbs::getCloseToken(),'/'];
+        $matches = PregUtil::getMatches(implode('', $patterns), $str);
+        if (!empty($matches)) {
+            foreach ($matches as $match) {
+                if (sizeof($match) > 1) {
+                    $exp = explode('@', $match[1]);
+                    if (sizeof($exp) === 2) {
+                        $match[1] = str_replace("'", '', trim($exp[0]));
+                        $str = str_replace(
+                            $match[0],
+                            $match[1],
+                            $str
+                        );
+                    }
                 }
             }
         }
