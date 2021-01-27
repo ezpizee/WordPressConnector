@@ -14,6 +14,7 @@ use Handlebars\Engine\Context;
 use Handlebars\Utils\DOMQuery;
 use Handlebars\Utils\Html;
 use Handlebars\Utils\HTML5;
+use Handlebars\Utils\Logger;
 use Handlebars\Utils\PregUtil;
 use RuntimeException;
 
@@ -270,15 +271,38 @@ class GX2CMS extends Processor
             $dataModel = $dom->hasAttribute('data-model') ? $dom->getAttribute('data-model') : 'properties';
             $exp = explode('@', $resourceValue);
             if (sizeof($exp) === 2) {
-                $resourceNodePath = trim($exp[0]);
+                $resourceNodePath = str_replace("'", '', trim($exp[0]));
                 $resourceType = str_replace(['resourceType=', "'", '"'], '', trim($exp[1]));
                 $resourceValue = ['nodePath'=>$resourceNodePath, 'resourceType'=>$resourceType, 'model'=>$dataModel];
             }
             else {
                 $resourceValue = ['nodePath'=>'', 'resourceType'=>str_replace("'", '', $resourceValue), 'model'=>$dataModel];
             }
-            $source = Hbs::HBS_TOKENS[0].'#resource \''.base64_encode(json_encode($resourceValue)).'\''.Hbs::HBS_TOKENS[1];
-//            die($source);
+            $source = [];
+            if (isset($this->context['parsys'])) {
+                foreach ($this->context['parsys'] as $parsy) {
+                    if (
+                        isset($parsy['nodePath']) && isset($parsy['resourceType']) &&
+                        $parsy['nodePath'] === $resourceValue['nodePath'] &&
+                        $parsy['resourceType'] === $resourceValue['resourceType']
+                    ) {
+                        if (isset($parsy['children']) && !empty($parsy['children'])) {
+                            foreach ($parsy['children'] as $child) {
+                                $source[] = Hbs::HBS_TOKENS[0] . '#resource \'' . base64_encode(json_encode($child)) . '\'' . Hbs::HBS_TOKENS[1];
+                            }
+                        }
+                        else {
+                            $source[] = '';
+                        }
+                    }
+                }
+            }
+            if (empty($source)) {
+                $source = Hbs::HBS_TOKENS[0].'#resource \''.base64_encode(json_encode($resourceValue)).'\''.Hbs::HBS_TOKENS[1];
+            }
+            else {
+                $source = implode('', $source);
+            }
             $ele = $dom->parentNode->ownerDocument->createElement('gx2cms', $source);
             $dom->parentNode->replaceChild($ele, $dom);
             //DOMQuery::replaceDOMElementWithDOMText($dom->parentNode, $dom, $source);
