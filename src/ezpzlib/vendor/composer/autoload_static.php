@@ -44,10 +44,34 @@ class ComposerStaticInit71437e9a752949ff232404692d8051c5
         ),
         'H' => 
         array (
-            'HandlebarsHelpers\\' => 
-            array (
-                0 => __DIR__ . '/..' . '/webconsol/php-hbs-helpers/src',
-            ),
+            'Handlebars\\Engine' =>
+                array (
+                    0 => __DIR__ . '/..' . '/webconsol/php-hbs-helpers/src',
+                ),
+            'Handlebars\\Exception' =>
+                array (
+                    0 => __DIR__ . '/..' . '/webconsol/php-hbs-helpers/src',
+                ),
+            'Handlebars\\Helpers' =>
+                array (
+                    0 => __DIR__ . '/..' . '/webconsol/php-hbs-helpers/src',
+                ),
+            'Handlebars\\Less' =>
+                array (
+                    0 => __DIR__ . '/..' . '/webconsol/php-hbs-helpers/src',
+                ),
+            'Handlebars\\Processors' =>
+                array (
+                    0 => __DIR__ . '/..' . '/webconsol/php-hbs-helpers/src',
+                ),
+            'Handlebars\\Sass' =>
+                array (
+                    0 => __DIR__ . '/..' . '/webconsol/php-hbs-helpers/src',
+                ),
+            'Handlebars\\Utils' =>
+                array (
+                    0 => __DIR__ . '/..' . '/webconsol/php-hbs-helpers/src',
+                ),
             'Handlebars' => 
             array (
                 0 => __DIR__ . '/..' . '/webconsol/handlebars.php/src',
