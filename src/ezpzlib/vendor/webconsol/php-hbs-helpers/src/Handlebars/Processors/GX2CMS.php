@@ -224,7 +224,7 @@ class GX2CMS extends Processor
     : void
     {
         if (!empty($dom)) {
-            $val = $this->removeToken($attr->value);
+            $val = str_replace('item.', 'this.', $this->removeToken($attr->value));
             $result = Comparator::dataSlyTest($val, $this->context);
             if ($result !== Context::DEFAULT_GX2CMS_VAR_RETURN_VALUE)
             {

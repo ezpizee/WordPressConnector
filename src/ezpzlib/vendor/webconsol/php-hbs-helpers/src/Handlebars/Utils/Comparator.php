@@ -7,7 +7,7 @@ use ParseError;
 
 final class Comparator
 {
-    const EQUALITY_PATTERN = '/(\=\=|\!\=|\>|\>\=|\<|\<\=\&\&|\|\|)/';
+    const EQUALITY_PATTERN = '/(\=\=|\!\=|\>|\>\=|\<|\<\=|\&\&|\|\|)/';
 
     public static function dataSlyTest(string $varName, array $context)
     {
