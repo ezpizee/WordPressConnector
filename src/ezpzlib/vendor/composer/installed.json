@@ -58,19 +58,19 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/ezpizee/PHPBaseContextProcessor.git",
-                "reference": "05f5a33dfd9952622c9daedbed1a0330183c2048"
+                "reference": "fdc7ff766e30588f288be4b950560a6c5188247f"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/ezpizee/PHPBaseContextProcessor/zipball/05f5a33dfd9952622c9daedbed1a0330183c2048",
-                "reference": "05f5a33dfd9952622c9daedbed1a0330183c2048",
+                "url": "https://api.github.com/repos/ezpizee/PHPBaseContextProcessor/zipball/fdc7ff766e30588f288be4b950560a6c5188247f",
+                "reference": "fdc7ff766e30588f288be4b950560a6c5188247f",
                 "shasum": ""
             },
             "require": {
                 "ezpizee/utils": "dev-master",
                 "php": ">=7.1"
             },
-            "time": "2021-01-07T00:37:38+00:00",
+            "time": "2021-02-04T03:08:23+00:00",
             "default-branch": true,
             "type": "library",
             "installation-source": "source",
@@ -159,18 +159,18 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/ezpizee/microservices-utils.git",
-                "reference": "71fef1c6852ba7900d14f3ca5cf469bf200e2a49"
+                "reference": "b831eced97590bf111bf77d17887d7c18d2c81c7"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/ezpizee/microservices-utils/zipball/71fef1c6852ba7900d14f3ca5cf469bf200e2a49",
-                "reference": "71fef1c6852ba7900d14f3ca5cf469bf200e2a49",
+                "url": "https://api.github.com/repos/ezpizee/microservices-utils/zipball/b831eced97590bf111bf77d17887d7c18d2c81c7",
+                "reference": "b831eced97590bf111bf77d17887d7c18d2c81c7",
                 "shasum": ""
             },
             "require": {
                 "php": ">=7.1"
             },
-            "time": "2021-01-07T00:37:08+00:00",
+            "time": "2021-02-04T03:09:26+00:00",
             "default-branch": true,
             "type": "library",
             "installation-source": "source",
@@ -257,12 +257,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/lcobucci/jwt.git",
-                "reference": "17cb82dd625ccb17c74bf8f38563d3b260306483"
+                "reference": "cd83b5421df3dbbbc66bd07a5b970c9efb6371b9"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/lcobucci/jwt/zipball/17cb82dd625ccb17c74bf8f38563d3b260306483",
-                "reference": "17cb82dd625ccb17c74bf8f38563d3b260306483",
+                "url": "https://api.github.com/repos/lcobucci/jwt/zipball/cd83b5421df3dbbbc66bd07a5b970c9efb6371b9",
+                "reference": "cd83b5421df3dbbbc66bd07a5b970c9efb6371b9",
                 "shasum": ""
             },
             "require": {
@@ -280,7 +280,7 @@
             "suggest": {
                 "lcobucci/clock": "*"
             },
-            "time": "2020-12-03T13:43:45+00:00",
+            "time": "2021-01-27T23:38:30+00:00",
             "type": "library",
             "extra": {
                 "branch-alias": {
@@ -518,18 +518,18 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/WEBCONSOL/php-hbs-helpers.git",
-                "reference": "6008e355027df528306d6c17ca64ac1dbfdd6d8a"
+                "reference": "7bb971c5dbec1d8a33510edf2a17fce39b4aa946"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/WEBCONSOL/php-hbs-helpers/zipball/6008e355027df528306d6c17ca64ac1dbfdd6d8a",
-                "reference": "6008e355027df528306d6c17ca64ac1dbfdd6d8a",
+                "url": "https://api.github.com/repos/WEBCONSOL/php-hbs-helpers/zipball/7bb971c5dbec1d8a33510edf2a17fce39b4aa946",
+                "reference": "7bb971c5dbec1d8a33510edf2a17fce39b4aa946",
                 "shasum": ""
             },
             "require": {
                 "php": ">=7.1"
             },
-            "time": "2021-01-06T15:59:25+00:00",
+            "time": "2021-01-29T02:32:30+00:00",
             "default-branch": true,
             "type": "library",
             "installation-source": "source",

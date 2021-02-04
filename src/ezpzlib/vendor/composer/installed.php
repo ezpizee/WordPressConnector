@@ -6,7 +6,7 @@
     'aliases' => 
     array (
     ),
-    'reference' => '855d14f25e80fea0874b369e581cd262ba4b52d3',
+    'reference' => 'c0ad26a6780f1d2246a69dcbafa56b26b646a1ad',
     'name' => 'ezpizee/php-libs',
   ),
   'versions' => 
@@ -29,7 +29,7 @@
       array (
         0 => '9999999-dev',
       ),
-      'reference' => '05f5a33dfd9952622c9daedbed1a0330183c2048',
+      'reference' => 'fdc7ff766e30588f288be4b950560a6c5188247f',
     ),
     'ezpizee/microservices-client' => 
     array (
@@ -48,7 +48,7 @@
       'aliases' => 
       array (
       ),
-      'reference' => '855d14f25e80fea0874b369e581cd262ba4b52d3',
+      'reference' => 'c0ad26a6780f1d2246a69dcbafa56b26b646a1ad',
     ),
     'ezpizee/utils' => 
     array (
@@ -58,7 +58,7 @@
       array (
         0 => '9999999-dev',
       ),
-      'reference' => '71fef1c6852ba7900d14f3ca5cf469bf200e2a49',
+      'reference' => 'b831eced97590bf111bf77d17887d7c18d2c81c7',
     ),
     'gx2cms/project' => 
     array (
@@ -77,7 +77,7 @@
       'aliases' => 
       array (
       ),
-      'reference' => '17cb82dd625ccb17c74bf8f38563d3b260306483',
+      'reference' => 'cd83b5421df3dbbbc66bd07a5b970c9efb6371b9',
     ),
     'mashape/unirest-php' => 
     array (
@@ -115,7 +115,7 @@
       array (
         0 => '9999999-dev',
       ),
-      'reference' => '6008e355027df528306d6c17ca64ac1dbfdd6d8a',
+      'reference' => '7bb971c5dbec1d8a33510edf2a17fce39b4aa946',
     ),
   ),
 );
