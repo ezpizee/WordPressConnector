@@ -60,9 +60,11 @@ class Processor
                     StringUtil::startsWith($match[$key], "data:") === false &&
                     StringUtil::startsWith($match[$key], $renderPage) === false
                 ) {
+                    $clientLibRoot = (isset($context['clientlibRoot']) ? $context['clientlibRoot'] : '').'/';
+                    $imagePath = str_replace('../', $clientLibRoot, $match[$key]);
                     $tmpl = str_replace(
                         $match[$key],
-                        $renderPage.'&imagePath='.$match[$key],
+                        $renderPage.'&imagePath='.$imagePath,
                         $tmpl
                     );
                 }
@@ -85,13 +87,10 @@ class Processor
                     StringUtil::startsWith($match[$key], "data:") === false &&
                     StringUtil::startsWith($match[$key], $renderPage) === false
                 ) {
-                    $replace = str_replace(
-                        implode('', [$match[3],'=',$match[4],$match[$key],$match[6]]),
-                         implode('', [$match[3],'=',$match[4],$renderPage.'&'.$match[9].'Path='.$match[$key],$match[6]]),
-                        $match[0]
-                    );
+                    $pattern = implode('', [$match[3],'=',$match[4],$match[$key],$match[6]]);
+                    $replace = implode('', [$match[3],'=',$match[4],$renderPage.'&'.$match[9].'Path='.$match[$key],$match[6]]);
                     $tmpl = str_replace(
-                        [$match[0], ' data-render-asset='.$match[8].$match[9].$match[10]],
+                        [$pattern, ' data-render-asset='.$match[8].$match[9].$match[10]],
                         [$replace, ''],
                         $tmpl
                     );

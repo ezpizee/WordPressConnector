@@ -94,11 +94,9 @@ class GX2CMS extends Processor
 
                     if ($node->hasChildNodes()) {
                         foreach ($node->childNodes as $childNode) {
-                            if ($childNode instanceof DOMDocumentFragment) {
-                                print_r($childNode);
-                            }
-                            else if ($childNode instanceof DOMElement) {
-                                $this->walkThroughSly($childNode->getElementsByTagName('sly'));
+                            if ($childNode instanceof DOMElement) {
+                                $ele = $childNode->getElementsByTagName('sly');
+                                $this->walkThroughSly($ele);
                             }
                             else if ($childNode instanceof DOMText) {
                                 $this->processDOMText($childNode);

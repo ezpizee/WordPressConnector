@@ -18,6 +18,7 @@
 
 namespace Handlebars\Helpers;
 
+use Ezpizee\Utils\StringUtil;
 use Handlebars\Context;
 use Handlebars\Engine\Hbs;
 use Handlebars\StringWrapper;
@@ -32,6 +33,15 @@ class IncludeHelper extends RequireHelper
         $parsedArgs = $template->parseArguments($args);
         if (sizeof($parsedArgs) > 0) {
             $path = Hbs::getTmplDir().DIRECTORY_SEPARATOR.$parsedArgs[0];
+            if (!file_exists($path)) {
+                $global = Hbs::getGlobalContextParam('global');
+                if ($global !== null && isset($global['resourcePathMapping'])) {
+                    $resourcePathMapping = $global['resourcePathMapping'];
+                    $path = StringUtil::removeDoubleSlashes(
+                        str_replace(array_keys($resourcePathMapping), array_values($resourcePathMapping), $path)
+                    );
+                }
+            }
             if (file_exists($path)) {
                 $model = [];
                 $currentPage = $context->get('currentPage');

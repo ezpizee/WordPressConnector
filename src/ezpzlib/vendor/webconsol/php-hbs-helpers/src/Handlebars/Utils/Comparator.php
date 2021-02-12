@@ -11,6 +11,8 @@ final class Comparator
 
     public static function dataSlyTest(string $varName, array $context)
     {
+        Context::formatVariableName($varName);
+
         $matches = PregUtil::getMatches(self::EQUALITY_PATTERN, $varName);
         if (!empty($matches)) {
             $pattern =  '/[\=|\!|\>|\<|\&|\|\(\)]/';
@@ -27,8 +29,11 @@ final class Comparator
                     ) {
                         $newVal = Context::searchVariableValueInContext($val, $context);
                         if ($newVal !== $context) {
-                            if (!is_numeric($newVal) && !is_null($newVal) && !is_bool($newVal)) {
-                                $newVal = "'".$newVal."'";
+                            if (is_array($newVal)) {
+                                $newVal = 'array';
+                            }
+                            else if (!is_numeric($newVal) && !is_null($newVal) && !is_bool($newVal)) {
+                                $newVal = $newVal==='true'||$newVal==='false'?$newVal:"'".$newVal."'";
                             }
                             if (!in_array($newVal, $replaces)) {
                                 $patterns[] = $val;

@@ -18,6 +18,7 @@
 
 namespace Handlebars\Helpers;
 
+use Ezpizee\Utils\StringUtil;
 use Handlebars\Context;
 use Handlebars\Engine\Hbs;
 use Handlebars\Helper;
@@ -53,6 +54,15 @@ class ResourceHelper implements Helper
         }
 
         $path = Hbs::absPartialPath($resourceType);
+        if (!file_exists($path)) {
+            $global = Hbs::getGlobalContextParam('global');
+            if ($global !== null && isset($global['resourcePathMapping'])) {
+                $resourcePathMapping = $global['resourcePathMapping'];
+                $path = StringUtil::removeDoubleSlashes(
+                    str_replace(array_keys($resourcePathMapping), array_values($resourcePathMapping), $path)
+                );
+            }
+        }
         if (file_exists($path)) {
             $model = Hbs::getModel($resourceType, $model);
             $model = array_merge(Hbs::getGlobalContext(), $model);

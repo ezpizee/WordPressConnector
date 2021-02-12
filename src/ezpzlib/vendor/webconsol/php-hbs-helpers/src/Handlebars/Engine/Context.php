@@ -4,6 +4,7 @@ namespace Handlebars\Engine;
 
 use Handlebars\Context as BaseContext;
 use Handlebars\StringWrapper;
+use Handlebars\Utils\PregUtil;
 use InvalidArgumentException;
 use ParseError;
 
@@ -100,6 +101,8 @@ class Context extends BaseContext
 
     private function getGX2CMSSpecificContext($variable, $strict=false)
     {
+        self::formatVariableName($variable);
+
         if (is_string($variable) && !empty($variable)) {
             $v = $this->stringLiteral($variable, $strict);
             if ($v !== self::DEFAULT_GX2CMS_VAR_RETURN_VALUE) {
@@ -167,7 +170,7 @@ class Context extends BaseContext
             if (!empty($val) && !is_numeric($val) && $val !== 'true' && $val !== 'false' && $val !== 'null' &&
                 $val[0] !== "'" && $val[0] !== '"'
             ) {
-                $newVal = Context::searchVariableValueInContext($val, $context);
+                $newVal = self::searchVariableValueInContext($val, $context);
                 if ($newVal !== $context) {
                     if (!is_numeric($newVal) && !is_null($newVal) && !is_bool($newVal)) {
                         $newVal = "'".$newVal."'";
@@ -194,6 +197,8 @@ class Context extends BaseContext
 
     public static function splitVariableName($variableName)
     {
+        self::formatVariableName($variableName);
+
         $bad_chars = preg_quote(self::NOT_VALID_NAME_CHARS, '/');
         $bad_seg_chars = preg_quote(self::NOT_VALID_SEGMENT_NAME_CHARS, '/');
 
@@ -271,6 +276,7 @@ class Context extends BaseContext
 
     public static function searchVariableValueInContext($variableName, $context, $strict=false)
     {
+        $newContext = $context;
         $chunks = self::splitVariableName($variableName);
         foreach ($chunks as $chunk) {
             if (is_string($context) && empty($context)) {
@@ -278,6 +284,30 @@ class Context extends BaseContext
             }
             $context = self::findVariableInContext($context, $chunk, $strict);
         }
+        if (empty($context) && isset($newContext['global'])) {
+            $context = $newContext['global'];
+            foreach ($chunks as $chunk) {
+                if (is_string($context) && empty($context)) {
+                    return $context;
+                }
+                $context = self::findVariableInContext($context, $chunk, $strict);
+            }
+        }
         return $context;
+    }
+
+    public static function formatVariableName(string &$variableName): void {
+        if (strpos($variableName, '[') !== false &&
+            strpos($variableName, ']') !== false) {
+            $pattern = '/(.[^\[]*)\[(.[^\]]*)\]/';
+            $matches = PregUtil::getMatches($pattern, $variableName);
+            if (!empty($matches)) {
+                $variableName = str_replace(
+                    ['[', ']', "'", '"'],
+                    ['.', '', '', ''],
+                    $variableName
+                );
+            }
+        }
     }
 }
