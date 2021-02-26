@@ -49,7 +49,7 @@ class Client extends MicroserviceClient
     public static function apiHost(string $env)
     : string
     {
-        return $env === 'dev' ? $env . '-api.ezpz.solutions' : ($env === 'prod' ? '' : $env . '-') . 'api.ezpizee.com';
+        return ($env === 'prod' ? '' : $env . '-') . 'api.ezpizee.com';
     }
 
     public static function getTokenUri()
@@ -85,12 +85,12 @@ class Client extends MicroserviceClient
     public static function cdnSchema(string $env)
     : string
     {
-        return 'http' . ($env === 'local' ? 's' : 's') . '://';
+        return 'http' . ($env === 'local' ? '' : 's') . '://';
     }
 
     public static function cdnHost(string $env)
     : string
     {
-        return ($env === 'prod' ? '' : ($env === 'local' ? 'dev' : $env) . '-') . 'cdn.ezpz.solutions';
+        return ($env === 'prod' ? '' : $env . '-') . 'cdn.ezpz.solutions';
     }
 }
