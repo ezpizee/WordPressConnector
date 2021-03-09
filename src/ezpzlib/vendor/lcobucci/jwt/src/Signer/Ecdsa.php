@@ -41,13 +41,6 @@ abstract class Ecdsa extends OpenSSL
     }
 
     /**
-     * Returns the length of each point in the signature, so that we can calculate and verify R and S points properly
-     *
-     * @internal
-     */
-    abstract public function getKeyLength();
-
-    /**
      * {@inheritdoc}
      */
     public function doVerify($expected, $payload, Key $key)
@@ -58,6 +51,13 @@ abstract class Ecdsa extends OpenSSL
             $key
         );
     }
+
+    /**
+     * Returns the length of each point in the signature, so that we can calculate and verify R and S points properly
+     *
+     * @internal
+     */
+    abstract public function getKeyLength();
 
     /**
      * {@inheritdoc}

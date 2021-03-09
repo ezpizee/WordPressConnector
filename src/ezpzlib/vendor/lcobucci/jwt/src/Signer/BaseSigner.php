@@ -39,16 +39,12 @@ abstract class BaseSigner implements Signer
     }
 
     /**
-     * Creates a hash with the given data
-     *
-     * @param string $payload
-     * @param Key $key
-     *
-     * @return string
-     * @internal
-     *
+     * {@inheritdoc}
      */
-    abstract public function createHash($payload, Key $key);
+    public function verify($expected, $payload, $key)
+    {
+        return $this->doVerify($expected, $payload, $this->getKey($key));
+    }
 
     /**
      * @param Key|string $key
@@ -67,23 +63,27 @@ abstract class BaseSigner implements Signer
     }
 
     /**
-     * {@inheritdoc}
+     * Creates a hash with the given data
+     *
+     * @internal
+     *
+     * @param string $payload
+     * @param Key $key
+     *
+     * @return string
      */
-    public function verify($expected, $payload, $key)
-    {
-        return $this->doVerify($expected, $payload, $this->getKey($key));
-    }
+    abstract public function createHash($payload, Key $key);
 
     /**
      * Performs the signature verification
+     *
+     * @internal
      *
      * @param string $expected
      * @param string $payload
      * @param Key $key
      *
      * @return boolean
-     * @internal
-     *
      */
     abstract public function doVerify($expected, $payload, Key $key);
 }

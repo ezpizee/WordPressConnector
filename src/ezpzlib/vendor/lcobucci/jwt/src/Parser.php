@@ -109,35 +109,13 @@ class Parser
      */
     protected function parseHeader($data)
     {
-        $header = (array)$this->decoder->jsonDecode($this->decoder->base64UrlDecode($data));
+        $header = (array) $this->decoder->jsonDecode($this->decoder->base64UrlDecode($data));
 
         if (isset($header['enc'])) {
             throw UnsupportedHeaderFound::encryption();
         }
 
         return $this->convertItems($header);
-    }
-
-    /**
-     * @param array<string, mixed> $items
-     *
-     * @return array<string, mixed>
-     */
-    private function convertItems(array $items)
-    {
-        foreach (RegisteredClaims::DATE_CLAIMS as $name) {
-            if (!array_key_exists($name, $items)) {
-                continue;
-            }
-
-            $items[$name] = new DateTimeImmutable('@' . ((int)$items[$name]));
-        }
-
-        if (array_key_exists(RegisteredClaims::AUDIENCE, $items) && !is_array($items[RegisteredClaims::AUDIENCE])) {
-            $items[RegisteredClaims::AUDIENCE] = [$items[RegisteredClaims::AUDIENCE]];
-        }
-
-        return $items;
     }
 
     /**
@@ -149,9 +127,31 @@ class Parser
      */
     protected function parseClaims($data)
     {
-        $claims = (array)$this->decoder->jsonDecode($this->decoder->base64UrlDecode($data));
+        $claims = (array) $this->decoder->jsonDecode($this->decoder->base64UrlDecode($data));
 
         return $this->convertItems($claims);
+    }
+
+    /**
+     * @param array<string, mixed> $items
+     *
+     * @return array<string, mixed>
+     */
+    private function convertItems(array $items)
+    {
+        foreach (RegisteredClaims::DATE_CLAIMS as $name) {
+            if (! array_key_exists($name, $items)) {
+                continue;
+            }
+
+            $items[$name] = new DateTimeImmutable('@' . ((int) $items[$name]));
+        }
+
+        if (array_key_exists(RegisteredClaims::AUDIENCE, $items) && ! is_array($items[RegisteredClaims::AUDIENCE])) {
+            $items[RegisteredClaims::AUDIENCE] = [$items[RegisteredClaims::AUDIENCE]];
+        }
+
+        return $items;
     }
 
     /**

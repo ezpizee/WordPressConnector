@@ -28,12 +28,10 @@ final class Validator implements \Lcobucci\JWT\Validator
         Constraint $constraint,
         Token $token,
         array &$violations
-    )
-    {
+    ) {
         try {
             $constraint->assert($token);
-        }
-        catch (ConstraintViolation $e) {
+        } catch (ConstraintViolation $e) {
             $violations[] = $e;
         }
     }
@@ -50,8 +48,7 @@ final class Validator implements \Lcobucci\JWT\Validator
             }
 
             return true;
-        }
-        catch (ConstraintViolation $e) {
+        } catch (ConstraintViolation $e) {
             return false;
         }
     }

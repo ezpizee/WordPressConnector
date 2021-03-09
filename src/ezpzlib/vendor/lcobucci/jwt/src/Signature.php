@@ -35,7 +35,7 @@ class Signature
      */
     public function __construct($hash, $encoded = '')
     {
-        $this->hash = $hash;
+        $this->hash    = $hash;
         $this->encoded = $encoded;
     }
 
@@ -63,10 +63,10 @@ class Signature
     /**
      * Returns the current hash as a string representation of the signature
      *
-     * @return string
+     * @deprecated This method has been removed from the public API in v4
      * @see Signature::hash()
      *
-     * @deprecated This method has been removed from the public API in v4
+     * @return string
      */
     public function __toString()
     {

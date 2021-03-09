@@ -2,6 +2,7 @@
 
 namespace EzpizeeWordPress;
 
+use Ezpizee\ConnectorUtils\Client;
 use Ezpizee\ConnectorUtils\Client as ConnectorClient;
 use Ezpizee\MicroservicesClient\Config;
 use Ezpizee\MicroservicesClient\Response;
@@ -28,11 +29,11 @@ class ApiClient
      */
     private $client;
     private $endpoints = [
-        '/api/v1/wordpress/refresh/token' => 'EzpizeeWordPress\ContextProcessors\RefreshToken',
-        '/api/v1/wordpress/expire-in' => 'EzpizeeWordPress\ContextProcessors\ExpireIn',
-        '/api/v1/wordpress/authenticated-user' => 'EzpizeeWordPress\ContextProcessors\AuthenticatedUser',
-        '/api/v1/wordpress/crsf-token' => 'EzpizeeWordPress\ContextProcessors\CRSFToken',
-        '/api/v1/wordpress/user/profile' => 'EzpizeeWordPress\ContextProcessors\User\Profile'
+        '/api/wordpress/refresh/token' => 'EzpizeeWordPress\ContextProcessors\RefreshToken',
+        '/api/wordpress/expire-in' => 'EzpizeeWordPress\ContextProcessors\ExpireIn',
+        '/api/wordpress/authenticated-user' => 'EzpizeeWordPress\ContextProcessors\AuthenticatedUser',
+        '/api/wordpress/crsf-token' => 'EzpizeeWordPress\ContextProcessors\CRSFToken',
+        '/api/wordpress/user/profile' => 'EzpizeeWordPress\ContextProcessors\User\Profile'
     ];
     private $uri = '';
     private $method = '';
@@ -75,7 +76,7 @@ class ApiClient
     protected function restApiClient(): Response
     {
         if (!empty($this->uri)) {
-            if (StringUtil::startsWith($this->uri, "/api/v1/wordpress/")) {
+            if (StringUtil::startsWith($this->uri, "/api/wordpress/")) {
                 return $this->requestToCMS();
             }
             return $this->requestToMicroServices();
@@ -112,10 +113,10 @@ class ApiClient
             $response = $this->client->get($this->uri);
         }
         else if ($this->method === 'POST') {
-            if ($this->contentType === 'application/json' || strpos($this->contentType, 'application/json') !== false) {
+            if ($this->contentType === Client::HEADER_VALUE_JSON || strpos($this->contentType, Client::HEADER_VALUE_JSON) !== false) {
                 $response = $this->client->post($this->uri, $this->body);
             }
-            if ($this->contentType === 'multipart/form-data' || strpos($this->contentType, 'multipart/form-data') !== false) {
+            if ($this->contentType === Client::HEADER_VALUE_MULTIPART || strpos($this->contentType, Client::HEADER_VALUE_MULTIPART) !== false) {
                 if ($this->hasFileUploaded()) {
                     $response = $this->submitFormDataWithFile();
                 }
@@ -129,7 +130,7 @@ class ApiClient
             }
         }
         else if ($this->method === 'PUT') {
-            if (isset($this->contentType) && $this->contentType === 'application/json') {
+            if ($this->contentType === Client::HEADER_VALUE_JSON || strpos($this->contentType, Client::HEADER_VALUE_JSON) !== false) {
                 $response = $this->client->put($this->uri, $this->body);
             }
             else {

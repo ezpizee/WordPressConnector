@@ -13,16 +13,16 @@ final class DataSet
 
     /**
      * @param array<string, mixed> $data
-     * @param string $encoded
+     * @param string               $encoded
      */
     public function __construct(array $data, $encoded)
     {
-        $this->data = $data;
+        $this->data    = $data;
         $this->encoded = $encoded;
     }
 
     /**
-     * @param string $name
+     * @param string     $name
      * @param mixed|null $default
      *
      * @return mixed|null

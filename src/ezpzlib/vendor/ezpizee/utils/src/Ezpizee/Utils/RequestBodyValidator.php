@@ -14,18 +14,26 @@ final class RequestBodyValidator
     : void
     {
         if ($field->is('type', 'string')) {
+            if (is_array($v)||is_object($v)) {$v=json_encode($v);}
             self::validateString($field, $v);
         }
+        else if ($field->is('type', 'json')) {
+            if (is_array($v)||is_object($v)) {$v=json_encode($v);}
+            self::validateJSON($field, $v);
+        }
         else if ($field->is('type', 'number')) {
+            if (is_array($v)||is_object($v)) {$v=json_encode($v);}
             self::validateNumber($field, $v);
         }
         else if ($field->is('type', 'boolean')) {
             self::validateBoolean($field, $v);
         }
         else if ($field->is('type', 'email')) {
+            if (is_array($v)||is_object($v)) {$v=json_encode($v);}
             self::validateEmail($field, $v);
         }
         else if ($field->is('type', 'url')) {
+            if (is_array($v)||is_object($v)) {$v=json_encode($v);}
             self::validateURL($field, $v);
         }
         else if ($field->is('type', 'array')) {
@@ -77,9 +85,10 @@ final class RequestBodyValidator
     public static function throwError(ListModel $field)
     : void
     {
-        if (DEBUG) {
+        if (defined('DEBUG') && DEBUG) {
             CustomResponse::setDebugInfo($field->getAsArray());
         }
+        Logger::debug($field);
         throw new RuntimeException(ResponseCodes::MESSAGE_ERROR_INVALID_FIELD, ResponseCodes::CODE_ERROR_INVALID_FIELD);
     }
 
@@ -114,9 +123,26 @@ final class RequestBodyValidator
         }
     }
 
+    public static function validateJSON(ListModel $field, string $v)
+    : void
+    {
+        if (!EncodingUtil::isValidJSON($v)) {
+            self::throwError($field);
+        }
+    }
+
     public static function validateBoolean(ListModel $field, $v)
     : void
     {
+        if ($v === 'true' || $v === 'false') {
+            $v = (bool) $v;
+        }
+        else if ($v === '1' || $v === 1) {
+            $v = true;
+        }
+        else if ($v === '0' || $v === 0) {
+            $v = false;
+        }
         if ($v !== 'true' && $v !== true && $v !== 'false' && $v !== false) {
             self::throwError($field);
         }

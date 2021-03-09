@@ -11,6 +11,7 @@ use Exception;
 use InvalidArgumentException;
 use Lcobucci\JWT\Signer\Key\FileCouldNotBeRead;
 use SplFileObject;
+
 use function strpos;
 use function substr;
 
@@ -67,14 +68,13 @@ class Key
 
         try {
             $file = new SplFileObject($path);
-        }
-        catch (Exception $exception) {
+        } catch (Exception $exception) {
             throw FileCouldNotBeRead::onPath($path, $exception);
         }
 
         $content = '';
 
-        while (!$file->eof()) {
+        while (! $file->eof()) {
             $content .= $file->fgets();
         }
 
@@ -94,10 +94,10 @@ class Key
     }
 
     /**
-     * @return string
+     * @deprecated This method is no longer part of the public interface
      * @see Key::contents()
      *
-     * @deprecated This method is no longer part of the public interface
+     * @return string
      */
     public function getContent()
     {
@@ -105,10 +105,10 @@ class Key
     }
 
     /**
-     * @return string
+     * @deprecated This method is no longer part of the public interface
      * @see Key::passphrase()
      *
-     * @deprecated This method is no longer part of the public interface
+     * @return string
      */
     public function getPassphrase()
     {

@@ -10,6 +10,7 @@ namespace Lcobucci\JWT\Parsing;
 use JsonException;
 use Lcobucci\JWT\Encoding\CannotDecodeContent;
 use RuntimeException;
+
 use function json_decode;
 use function json_last_error;
 use function json_last_error_msg;
@@ -47,8 +48,7 @@ class Decoder
 
         try {
             return json_decode($json, false, 512, JSON_THROW_ON_ERROR);
-        }
-        catch (JsonException $exception) {
+        } catch (JsonException $exception) {
             throw CannotDecodeContent::jsonIssues($exception);
         }
     }

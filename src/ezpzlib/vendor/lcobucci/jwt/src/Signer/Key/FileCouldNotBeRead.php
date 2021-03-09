@@ -2,8 +2,8 @@
 
 namespace Lcobucci\JWT\Signer\Key;
 
-use InvalidArgumentException;
 use Lcobucci\JWT\Exception;
+use InvalidArgumentException;
 
 if (PHP_MAJOR_VERSION === 7) {
     final class FileCouldNotBeRead extends InvalidArgumentException implements Exception
@@ -18,8 +18,7 @@ if (PHP_MAJOR_VERSION === 7) {
             );
         }
     }
-}
-else {
+} else {
     final class FileCouldNotBeRead extends InvalidArgumentException implements Exception
     {
         /**

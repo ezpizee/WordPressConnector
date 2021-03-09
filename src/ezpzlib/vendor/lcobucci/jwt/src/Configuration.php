@@ -45,15 +45,14 @@ final class Configuration
         Key $verificationKey,
         Encoder $encoder = null,
         Decoder $decoder = null
-    )
-    {
-        $this->signer = $signer;
-        $this->signingKey = $signingKey;
+    ) {
+        $this->signer          = $signer;
+        $this->signingKey      = $signingKey;
         $this->verificationKey = $verificationKey;
-        $this->parser = new Parser($decoder ?: new Decoder());
-        $this->validator = new Validation\Validator();
+        $this->parser          = new Parser($decoder ?: new Decoder());
+        $this->validator       = new Validation\Validator();
 
-        $this->builderFactory = static function () use ($encoder){
+        $this->builderFactory = static function () use ($encoder) {
             return new Builder($encoder ?: new Encoder());
         };
     }
@@ -65,8 +64,7 @@ final class Configuration
         Key $verificationKey,
         Encoder $encoder = null,
         Decoder $decoder = null
-    )
-    {
+    ) {
         return new self(
             $signer,
             $signingKey,
@@ -82,8 +80,7 @@ final class Configuration
         Key $key,
         Encoder $encoder = null,
         Decoder $decoder = null
-    )
-    {
+    ) {
         return new self(
             $signer,
             $key,
@@ -97,8 +94,7 @@ final class Configuration
     public static function forUnsecuredSigner(
         Encoder $encoder = null,
         Decoder $decoder = null
-    )
-    {
+    ) {
         $key = InMemory::plainText('');
 
         return new self(
@@ -113,8 +109,8 @@ final class Configuration
     /** @param callable(): Builder $builderFactory */
     public function setBuilderFactory(callable $builderFactory)
     {
-        if (!$builderFactory instanceof Closure) {
-            $builderFactory = static function () use ($builderFactory){
+        if (! $builderFactory instanceof Closure) {
+            $builderFactory = static function() use ($builderFactory) {
                 return $builderFactory();
             };
         }

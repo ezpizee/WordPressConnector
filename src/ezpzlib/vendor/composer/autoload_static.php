@@ -7,12 +7,22 @@ namespace Composer\Autoload;
 class ComposerStaticInit71437e9a752949ff232404692d8051c5
 {
     public static $files = array (
+        '79f66bc0a1900f77abe4a9a299057a0a' => __DIR__ . '/..' . '/starkbank/ecdsa/src/ellipticcurve.php',
         '256c1545158fc915c75e51a931bdba60' => __DIR__ . '/..' . '/lcobucci/jwt/compat/class-aliases.php',
         '0d273777b2b0d96e49fb3d800c6b0e81' => __DIR__ . '/..' . '/lcobucci/jwt/compat/json-exception-polyfill.php',
         'd6b246ac924292702635bb2349f4a64b' => __DIR__ . '/..' . '/lcobucci/jwt/compat/lcobucci-clock-polyfill.php',
     );
 
     public static $prefixLengthsPsr4 = array (
+        'S' => 
+        array (
+            'SendGrid\\Stats\\' => 15,
+            'SendGrid\\Mail\\' => 14,
+            'SendGrid\\Helper\\' => 16,
+            'SendGrid\\EventWebhook\\' => 22,
+            'SendGrid\\Contacts\\' => 18,
+            'SendGrid\\' => 9,
+        ),
         'M' => 
         array (
             'Masterminds\\' => 12,
@@ -24,6 +34,30 @@ class ComposerStaticInit71437e9a752949ff232404692d8051c5
     );
 
     public static $prefixDirsPsr4 = array (
+        'SendGrid\\Stats\\' => 
+        array (
+            0 => __DIR__ . '/..' . '/sendgrid/sendgrid/lib/stats',
+        ),
+        'SendGrid\\Mail\\' => 
+        array (
+            0 => __DIR__ . '/..' . '/sendgrid/sendgrid/lib/mail',
+        ),
+        'SendGrid\\Helper\\' => 
+        array (
+            0 => __DIR__ . '/..' . '/sendgrid/sendgrid/lib/helper',
+        ),
+        'SendGrid\\EventWebhook\\' => 
+        array (
+            0 => __DIR__ . '/..' . '/sendgrid/sendgrid/lib/eventwebhook',
+        ),
+        'SendGrid\\Contacts\\' => 
+        array (
+            0 => __DIR__ . '/..' . '/sendgrid/sendgrid/lib/contacts',
+        ),
+        'SendGrid\\' => 
+        array (
+            0 => __DIR__ . '/..' . '/sendgrid/php-http-client/lib',
+        ),
         'Masterminds\\' => 
         array (
             0 => __DIR__ . '/..' . '/masterminds/html5/src',
@@ -90,6 +124,22 @@ class ComposerStaticInit71437e9a752949ff232404692d8051c5
             array (
                 0 => __DIR__ . '/..' . '/ezpizee/utils/src',
             ),
+            'Ezpizee\\SupportedCMS\\WordPress' => 
+            array (
+                0 => __DIR__ . '/..' . '/ezpizee/supported-cms/src',
+            ),
+            'Ezpizee\\SupportedCMS\\Joomla' => 
+            array (
+                0 => __DIR__ . '/..' . '/ezpizee/supported-cms/src',
+            ),
+            'Ezpizee\\SupportedCMS\\Exception' => 
+            array (
+                0 => __DIR__ . '/..' . '/ezpizee/supported-cms/src',
+            ),
+            'Ezpizee\\SupportedCMS\\Drupal' => 
+            array (
+                0 => __DIR__ . '/..' . '/ezpizee/supported-cms/src',
+            ),
             'Ezpizee\\MicroservicesClient' => 
             array (
                 0 => __DIR__ . '/..' . '/ezpizee/microservices-client/src',
@@ -106,7 +156,10 @@ class ComposerStaticInit71437e9a752949ff232404692d8051c5
     );
 
     public static $classMap = array (
+        'BaseSendGridClientInterface' => __DIR__ . '/..' . '/sendgrid/sendgrid/lib/BaseSendGridClientInterface.php',
         'Composer\\InstalledVersions' => __DIR__ . '/..' . '/composer/InstalledVersions.php',
+        'SendGrid' => __DIR__ . '/..' . '/sendgrid/sendgrid/lib/SendGrid.php',
+        'TwilioEmail' => __DIR__ . '/..' . '/sendgrid/sendgrid/lib/TwilioEmail.php',
     );
 
     public static function getInitializer(ClassLoader $loader)

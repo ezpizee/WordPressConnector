@@ -78,19 +78,6 @@ class Factory
     }
 
     /**
-     * Creates a basic claim
-     *
-     * @param string $name
-     * @param mixed $value
-     *
-     * @return Basic
-     */
-    private function createBasic($name, $value)
-    {
-        return new Basic($name, $value);
-    }
-
-    /**
      * Creates a claim that can be compared (greator or equals)
      *
      * @param string $name
@@ -127,5 +114,18 @@ class Factory
     private function createEqualsTo($name, $value)
     {
         return new EqualsTo($name, $value);
+    }
+
+    /**
+     * Creates a basic claim
+     *
+     * @param string $name
+     * @param mixed $value
+     *
+     * @return Basic
+     */
+    private function createBasic($name, $value)
+    {
+        return new Basic($name, $value);
     }
 }

@@ -76,6 +76,8 @@ class Token implements JsonSerializable
         return !empty($key) ? (isset($this->user[$key]) ? $this->user[$key] : null) : ($this->user[$key]);
     }
 
+    public function isEmpty(): bool {return empty($this->data);}
+
     public function jsonSerialize()
     : array
     {

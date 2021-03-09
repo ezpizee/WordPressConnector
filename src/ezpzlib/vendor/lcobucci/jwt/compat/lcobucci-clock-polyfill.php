@@ -6,7 +6,7 @@ use DateTimeImmutable;
 use DateTimeZone;
 use function interface_exists;
 
-if (!interface_exists(Clock::class)) {
+if (! interface_exists(Clock::class)) {
     interface Clock
     {
         /** @return DateTimeImmutable */

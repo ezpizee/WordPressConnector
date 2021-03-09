@@ -19,7 +19,7 @@ final class IdentifiedBy implements Constraint
 
     public function assert(Token $token)
     {
-        if (!$token->isIdentifiedBy($this->id)) {
+        if (! $token->isIdentifiedBy($this->id)) {
             throw new ConstraintViolation(
                 'The token is not identified with the expected ID'
             );

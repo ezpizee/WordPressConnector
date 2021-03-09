@@ -70,6 +70,6 @@ class Basic implements Claim
      */
     public function __toString()
     {
-        return (string)$this->value;
+        return (string) $this->value;
     }
 }

@@ -1,0 +1,32 @@
+{
+  "name": "ezpizee/supported-cms",
+  "description": "PHP Supported CMS Libraries",
+  "homepage": "https://github.com/ezpizee/supported-cms",
+  "type": "library",
+  "minimum-stability": "dev",
+  "prefer-stable": true,
+  "license": "MIT",
+  "authors": [
+    {
+      "name": "Pang Khon",
+      "email": "khon.pang@ezpizee.com"
+    },
+    {
+      "name": "Sothea Nim",
+      "email": "sothea.nim@ezpizee.com.com"
+    }
+  ],
+  "require": {
+    "php": ">=7.1",
+    "ezpizee/utils": "dev-master",
+    "ezpizee/microservices-client": "dev-master"
+  },
+  "autoload": {
+    "psr-0": {
+      "Ezpizee\\SupportedCMS\\Drupal": "src/",
+      "Ezpizee\\SupportedCMS\\Exception": "src/",
+      "Ezpizee\\SupportedCMS\\Joomla": "src/",
+      "Ezpizee\\SupportedCMS\\WordPress": "src/"
+    }
+  }
+}

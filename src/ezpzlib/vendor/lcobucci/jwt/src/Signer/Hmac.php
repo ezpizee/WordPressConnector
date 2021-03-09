@@ -18,6 +18,14 @@ abstract class Hmac extends BaseSigner
     /**
      * {@inheritdoc}
      */
+    public function createHash($payload, Key $key)
+    {
+        return hash_hmac($this->getAlgorithm(), $payload, $key->getContent(), true);
+    }
+
+    /**
+     * {@inheritdoc}
+     */
     public function doVerify($expected, $payload, Key $key)
     {
         if (!is_string($expected)) {
@@ -28,19 +36,11 @@ abstract class Hmac extends BaseSigner
     }
 
     /**
-     * {@inheritdoc}
-     */
-    public function createHash($payload, Key $key)
-    {
-        return hash_hmac($this->getAlgorithm(), $payload, $key->getContent(), true);
-    }
-
-    /**
      * Returns the algorithm name
      *
-     * @return string
      * @internal
      *
+     * @return string
      */
     abstract public function getAlgorithm();
 }

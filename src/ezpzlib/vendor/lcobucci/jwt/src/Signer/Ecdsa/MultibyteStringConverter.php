@@ -9,7 +9,6 @@
  *
  * @link https://github.com/web-token/jwt-framework/blob/v1.2/src/Component/Core/Util/ECSignature.php
  */
-
 namespace Lcobucci\JWT\Signer\Ecdsa;
 
 use function bin2hex;
@@ -28,13 +27,13 @@ use const STR_PAD_LEFT;
  */
 final class MultibyteStringConverter implements SignatureConverter
 {
-    const ASN1_SEQUENCE = '30';
-    const ASN1_INTEGER = '02';
-    const ASN1_MAX_SINGLE_BYTE = 128;
-    const ASN1_LENGTH_2BYTES = '81';
+    const ASN1_SEQUENCE          = '30';
+    const ASN1_INTEGER           = '02';
+    const ASN1_MAX_SINGLE_BYTE   = 128;
+    const ASN1_LENGTH_2BYTES     = '81';
     const ASN1_BIG_INTEGER_LIMIT = '7f';
-    const ASN1_NEGATIVE_INTEGER = '00';
-    const BYTE_SIZE = 2;
+    const ASN1_NEGATIVE_INTEGER  = '00';
+    const BYTE_SIZE              = 2;
 
     public function toAsn1($signature, $length)
     {
@@ -50,7 +49,7 @@ final class MultibyteStringConverter implements SignatureConverter
         $lengthR = self::octetLength($pointR);
         $lengthS = self::octetLength($pointS);
 
-        $totalLength = $lengthR + $lengthS + self::BYTE_SIZE + self::BYTE_SIZE;
+        $totalLength  = $lengthR + $lengthS + self::BYTE_SIZE + self::BYTE_SIZE;
         $lengthPrefix = $totalLength > self::ASN1_MAX_SINGLE_BYTE ? self::ASN1_LENGTH_2BYTES : '';
 
         $asn1 = hex2bin(
@@ -65,7 +64,7 @@ final class MultibyteStringConverter implements SignatureConverter
 
     private static function octetLength($data)
     {
-        return (int)(mb_strlen($data, '8bit') / self::BYTE_SIZE);
+        return (int) (mb_strlen($data, '8bit') / self::BYTE_SIZE);
     }
 
     private static function preparePositiveInteger($data)
@@ -84,7 +83,7 @@ final class MultibyteStringConverter implements SignatureConverter
 
     public function fromAsn1($signature, $length)
     {
-        $message = bin2hex($signature);
+        $message  = bin2hex($signature);
         $position = 0;
 
         if (self::readAsn1Content($message, $position, self::BYTE_SIZE) !== self::ASN1_SEQUENCE) {
@@ -105,10 +104,21 @@ final class MultibyteStringConverter implements SignatureConverter
 
     private static function readAsn1Content($message, &$position, $length)
     {
-        $content = mb_substr($message, $position, $length, '8bit');
+        $content   = mb_substr($message, $position, $length, '8bit');
         $position += $length;
 
         return $content;
+    }
+
+    private static function readAsn1Integer($message, &$position)
+    {
+        if (self::readAsn1Content($message, $position, self::BYTE_SIZE) !== self::ASN1_INTEGER) {
+            throw ConversionFailed::integerExpected();
+        }
+
+        $length = (int) hexdec(self::readAsn1Content($message, $position, self::BYTE_SIZE));
+
+        return self::readAsn1Content($message, $position, $length * self::BYTE_SIZE);
     }
 
     private static function retrievePositiveInteger($data)
@@ -119,16 +129,5 @@ final class MultibyteStringConverter implements SignatureConverter
         }
 
         return $data;
-    }
-
-    private static function readAsn1Integer($message, &$position)
-    {
-        if (self::readAsn1Content($message, $position, self::BYTE_SIZE) !== self::ASN1_INTEGER) {
-            throw ConversionFailed::integerExpected();
-        }
-
-        $length = (int)hexdec(self::readAsn1Content($message, $position, self::BYTE_SIZE));
-
-        return self::readAsn1Content($message, $position, $length * self::BYTE_SIZE);
     }
 }

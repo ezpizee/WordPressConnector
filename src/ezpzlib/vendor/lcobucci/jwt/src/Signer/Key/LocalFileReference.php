@@ -3,6 +3,7 @@
 namespace Lcobucci\JWT\Signer\Key;
 
 use Lcobucci\JWT\Signer\Key;
+
 use function file_exists;
 use function strpos;
 use function substr;
@@ -25,7 +26,7 @@ final class LocalFileReference extends Key
             $path = substr($path, 7);
         }
 
-        if (!file_exists($path)) {
+        if (! file_exists($path)) {
             throw FileCouldNotBeRead::onPath($path);
         }
 

@@ -18,7 +18,7 @@ final class SignedWith implements Constraint
     public function __construct(Signer $signer, Signer\Key $key)
     {
         $this->signer = $signer;
-        $this->key = $key;
+        $this->key    = $key;
     }
 
     public function assert(Token $token)
@@ -27,7 +27,7 @@ final class SignedWith implements Constraint
             throw new ConstraintViolation('Token signer mismatch');
         }
 
-        if (!$this->signer->verify((string)$token->signature(), $token->getPayload(), $this->key)) {
+        if (! $this->signer->verify((string) $token->signature(), $token->getPayload(), $this->key)) {
             throw new ConstraintViolation('Token signature mismatch');
         }
     }

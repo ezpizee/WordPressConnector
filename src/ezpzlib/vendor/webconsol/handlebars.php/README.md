@@ -49,9 +49,9 @@ OR
 ```php
 <?php
 
-use HandlebarsHelpers\Hbs;
+use Handlebars\Engine\Hbs;
 
-// When using HandlebarsHelpers\Hbs, tmpl can be HTML string or a path to a .hbs file
+// When using Handlebars\Engine\Hbs, tmpl can be HTML string or a path to a .hbs file
 $tmpl = 'Planets:<br />{{#each planets}}<h6>{{this}}</h6>{{/each}}';
 $context = array('planets' => array(
     "Mercury",

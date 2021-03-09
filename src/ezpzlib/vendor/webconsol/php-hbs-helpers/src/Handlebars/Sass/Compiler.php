@@ -1753,7 +1753,7 @@ class Compiler {
 
 		foreach ($args as $arg) {
 			list($key, $value) = $arg;
-			$key = $key[1];
+            $key = is_array($key) ? $key[1] : null;
 			if (empty($key)) {
 				$posArgs[] = $value;
 			} else {

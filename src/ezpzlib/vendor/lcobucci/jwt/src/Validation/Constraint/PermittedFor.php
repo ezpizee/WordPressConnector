@@ -8,7 +8,7 @@ use Lcobucci\JWT\Validation\ConstraintViolation;
 
 final class PermittedFor implements Constraint
 {
-    /** @var string */
+    /** @var string  */
     private $audience;
 
     public function __construct($audience)
@@ -18,7 +18,7 @@ final class PermittedFor implements Constraint
 
     public function assert(Token $token)
     {
-        if (!$token->isPermittedFor($this->audience)) {
+        if (! $token->isPermittedFor($this->audience)) {
             throw new ConstraintViolation(
                 'The token is not allowed to be used by this audience'
             );

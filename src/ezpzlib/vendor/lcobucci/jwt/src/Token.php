@@ -75,8 +75,7 @@ class Token
         Signature $signature = null,
         array $payload = ['', ''],
         Factory $claimFactory = null
-    )
-    {
+    ) {
         $this->headers = $this->convertToDataSet($headers, $payload[0]);
         $this->claims = $this->convertToDataSet($claims, $payload[1]);
         $this->signature = $signature ?: Signature::fromEmptyData();
@@ -105,17 +104,17 @@ class Token
     /**
      * Returns the token headers
      *
-     * @return array
+     * @deprecated This method has been removed from the interface in v4.0
      * @see Token::headers()
      *
-     * @deprecated This method has been removed from the interface in v4.0
+     * @return array
      */
     public function getHeaders()
     {
         $items = [];
 
         foreach ($this->headers->all() as $name => $value) {
-            if (!in_array($name, RegisteredClaims::ALL, true) || !$this->claims->has($name)) {
+            if (! in_array($name, RegisteredClaims::ALL, true) || ! $this->claims->has($name)) {
                 $items[$name] = $value;
                 continue;
             }
@@ -129,13 +128,13 @@ class Token
     /**
      * Returns if the header is configured
      *
+     * @deprecated This method has been removed from the interface in v4.0
+     * @see Token::headers()
+     * @see DataSet::has()
+     *
      * @param string $name
      *
      * @return boolean
-     * @see DataSet::has()
-     *
-     * @deprecated This method has been removed from the interface in v4.0
-     * @see Token::headers()
      */
     public function hasHeader($name)
     {
@@ -145,20 +144,20 @@ class Token
     /**
      * Returns the value of a token header
      *
+     * @deprecated This method has been removed from the interface in v4.0
+     * @see Token::headers()
+     * @see DataSet::has()
+     *
      * @param string $name
      * @param mixed $default
      *
      * @return mixed
      *
      * @throws OutOfBoundsException
-     * @see Token::headers()
-     * @see DataSet::has()
-     *
-     * @deprecated This method has been removed from the interface in v4.0
      */
     public function getHeader($name, $default = null)
     {
-        if (func_num_args() === 1 && !$this->headers->has($name)) {
+        if (func_num_args() === 1 && ! $this->headers->has($name)) {
             throw new OutOfBoundsException(sprintf('Requested header "%s" is not configured', $name));
         }
 
@@ -172,139 +171,12 @@ class Token
     }
 
     /**
-     * Returns if the claim is configured
-     *
-     * @param string $name
-     *
-     * @return boolean
-     * @see DataSet::has()
-     *
-     * @deprecated This method has been removed from the interface in v4.0
-     * @see Token::claims()
-     */
-    public function hasClaim($name)
-    {
-        return $this->claims->has($name);
-    }
-
-    /**
-     * Returns the value of a token claim
-     *
-     * @param string $name
-     * @param mixed $default
-     *
-     * @return mixed
-     *
-     * @throws OutOfBoundsException
-     * @see Token::claims()
-     * @see DataSet::get()
-     *
-     * @deprecated This method has been removed from the interface in v4.0
-     */
-    public function getClaim($name, $default = null)
-    {
-        if (func_num_args() === 1 && !$this->claims->has($name)) {
-            throw new OutOfBoundsException(sprintf('Requested header "%s" is not configured', $name));
-        }
-
-        $value = $this->claims->get($name, $default);
-
-        if ($value instanceof DateTimeImmutable && in_array($name, RegisteredClaims::DATE_CLAIMS, true)) {
-            return $value->getTimestamp();
-        }
-
-        if ($name === RegisteredClaims::AUDIENCE && is_array($value)) {
-            return current($value);
-        }
-
-        return $value;
-    }
-
-    /**
-     * Verify if the key matches with the one that created the signature
-     *
-     * @param Signer $signer
-     * @param Key|string $key
-     *
-     * @return boolean
-     * @see \Lcobucci\JWT\Validation\Validator
-     *
-     * @deprecated This method has been removed from the interface in v4.0
-     */
-    public function verify(Signer $signer, $key)
-    {
-        if ($this->headers->get('alg') !== $signer->getAlgorithmId()) {
-            return false;
-        }
-
-        return $this->signature->verify($signer, $this->getPayload(), $key);
-    }
-
-    /**
-     * Returns the token payload
-     *
-     * @return string
-     * @see Token::payload()
-     *
-     * @deprecated This method has been removed from the interface in v4.0
-     */
-    public function getPayload()
-    {
-        return $this->payload();
-    }
-
-    /**
-     * Returns the token payload
-     *
-     * @return string
-     */
-    public function payload()
-    {
-        return $this->headers->toString() . '.' . $this->claims->toString();
-    }
-
-    /**
-     * Validates if the token is valid
-     *
-     * @param ValidationData $data
-     *
-     * @return boolean
-     * @deprecated This method has been removed from the interface in v4.0
-     * @see \Lcobucci\JWT\Validation\Validator
-     *
-     */
-    public function validate(ValidationData $data)
-    {
-        foreach ($this->getValidatableClaims() as $claim) {
-            if (!$claim->validate($data)) {
-                return false;
-            }
-        }
-
-        return true;
-    }
-
-    /**
-     * Yields the validatable claims
-     *
-     * @return Generator
-     */
-    private function getValidatableClaims()
-    {
-        foreach ($this->getClaims() as $claim) {
-            if ($claim instanceof Validatable) {
-                yield $claim;
-            }
-        }
-    }
-
-    /**
      * Returns the token claim set
      *
-     * @return array
+     * @deprecated This method has been removed from the interface in v4.0
      * @see Token::claims()
      *
-     * @deprecated This method has been removed from the interface in v4.0
+     * @return array
      */
     public function getClaims()
     {
@@ -318,6 +190,99 @@ class Token
     }
 
     /**
+     * Returns if the claim is configured
+     *
+     * @deprecated This method has been removed from the interface in v4.0
+     * @see Token::claims()
+     * @see DataSet::has()
+     *
+     * @param string $name
+     *
+     * @return boolean
+     */
+    public function hasClaim($name)
+    {
+        return $this->claims->has($name);
+    }
+
+    /**
+     * Returns the value of a token claim
+     *
+     * @deprecated This method has been removed from the interface in v4.0
+     * @see Token::claims()
+     * @see DataSet::get()
+     *
+     * @param string $name
+     * @param mixed $default
+     *
+     * @return mixed
+     *
+     * @throws OutOfBoundsException
+     */
+    public function getClaim($name, $default = null)
+    {
+        if (func_num_args() === 1 && ! $this->claims->has($name)) {
+            throw new OutOfBoundsException(sprintf('Requested header "%s" is not configured', $name));
+        }
+
+        $value = $this->claims->get($name, $default);
+
+        if ($value instanceof DateTimeImmutable && in_array($name, RegisteredClaims::DATE_CLAIMS, true)) {
+            return $value->getTimestamp();
+        }
+
+        if ($name === RegisteredClaims::AUDIENCE && is_array($value)) {
+            if (count($value) > 1) {
+                trigger_error('You will only get the first array entry as a string. Use Token::claims()->get() instead.', E_USER_DEPRECATED);
+            }
+            return current($value);
+        }
+
+        return $value;
+    }
+
+    /**
+     * Verify if the key matches with the one that created the signature
+     *
+     * @deprecated This method has been removed from the interface in v4.0
+     * @see \Lcobucci\JWT\Validation\Validator
+     *
+     * @param Signer $signer
+     * @param Key|string $key
+     *
+     * @return boolean
+     */
+    public function verify(Signer $signer, $key)
+    {
+        if ($this->headers->get('alg') !== $signer->getAlgorithmId()) {
+            return false;
+        }
+
+        return $this->signature->verify($signer, $this->getPayload(), $key);
+    }
+
+    /**
+     * Validates if the token is valid
+     *
+     * @deprecated This method has been removed from the interface in v4.0
+     * @see \Lcobucci\JWT\Validation\Validator
+     *
+     * @param ValidationData $data
+     *
+     * @return boolean
+     */
+    public function validate(ValidationData $data)
+    {
+        foreach ($this->getValidatableClaims() as $claim) {
+            if (!$claim->validate($data)) {
+                return false;
+            }
+        }
+
+        return true;
+    }
+
+    /**
      * Determine if the token is expired.
      *
      * @param DateTimeInterface|null $now Defaults to the current time.
@@ -326,7 +291,7 @@ class Token
      */
     public function isExpired(DateTimeInterface $now = null)
     {
-        if (!$this->claims->has('exp')) {
+        if (! $this->claims->has('exp')) {
             return false;
         }
 
@@ -336,7 +301,7 @@ class Token
 
         $now = $now ?: new DateTimeImmutable();
 
-        return $now > $this->claims->get(RegisteredClaims::EXPIRATION_TIME);
+        return $now >= $this->claims->get(RegisteredClaims::EXPIRATION_TIME);
     }
 
     /**
@@ -399,6 +364,43 @@ class Token
         return $now >= $this->claims->get(RegisteredClaims::NOT_BEFORE);
     }
 
+    /**
+     * Yields the validatable claims
+     *
+     * @return Generator
+     */
+    private function getValidatableClaims()
+    {
+        foreach ($this->getClaims() as $claim) {
+            if ($claim instanceof Validatable) {
+                yield $claim;
+            }
+        }
+    }
+
+    /**
+     * Returns the token payload
+     *
+     * @deprecated This method has been removed from the interface in v4.0
+     * @see Token::payload()
+     *
+     * @return string
+     */
+    public function getPayload()
+    {
+        return $this->payload();
+    }
+
+    /**
+     * Returns the token payload
+     *
+     * @return string
+     */
+    public function payload()
+    {
+        return $this->headers->toString() . '.' . $this->claims->toString();
+    }
+
     /** @return Signature */
     public function signature()
     {
@@ -408,10 +410,10 @@ class Token
     /**
      * Returns an encoded representation of the token
      *
-     * @return string
+     * @deprecated This method has been removed from the interface in v4.0
      * @see Token::toString()
      *
-     * @deprecated This method has been removed from the interface in v4.0
+     * @return string
      */
     public function __toString()
     {
@@ -422,7 +424,7 @@ class Token
     public function toString()
     {
         return $this->headers->toString() . '.'
-            . $this->claims->toString() . '.'
-            . $this->signature->toString();
+             . $this->claims->toString() . '.'
+             . $this->signature->toString();
     }
 }

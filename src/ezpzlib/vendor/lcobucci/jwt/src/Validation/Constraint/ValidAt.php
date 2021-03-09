@@ -19,7 +19,7 @@ final class ValidAt implements Constraint
 
     public function __construct(Clock $clock, DateInterval $leeway = null)
     {
-        $this->clock = $clock;
+        $this->clock  = $clock;
         $this->leeway = $this->guardLeeway($leeway);
     }
 
@@ -47,26 +47,26 @@ final class ValidAt implements Constraint
     }
 
     /** @throws ConstraintViolation */
-    private function assertIssueTime(Token $token, DateTimeInterface $now)
+    private function assertExpiration(Token $token, DateTimeInterface $now)
     {
-        if (!$token->hasBeenIssuedBefore($now)) {
-            throw new ConstraintViolation('The token was issued in the future');
+        if ($token->isExpired($now)) {
+            throw new ConstraintViolation('The token is expired');
         }
     }
 
     /** @throws ConstraintViolation */
     private function assertMinimumTime(Token $token, DateTimeInterface $now)
     {
-        if (!$token->isMinimumTimeBefore($now)) {
+        if (! $token->isMinimumTimeBefore($now)) {
             throw new ConstraintViolation('The token cannot be used yet');
         }
     }
 
     /** @throws ConstraintViolation */
-    private function assertExpiration(Token $token, DateTimeInterface $now)
+    private function assertIssueTime(Token $token, DateTimeInterface $now)
     {
-        if ($token->isExpired($now)) {
-            throw new ConstraintViolation('The token is expired');
+        if (! $token->hasBeenIssuedBefore($now)) {
+            throw new ConstraintViolation('The token was issued in the future');
         }
     }
 }

@@ -30,7 +30,7 @@ private static $installed = array (
     'aliases' => 
     array (
     ),
-    'reference' => 'c0ad26a6780f1d2246a69dcbafa56b26b646a1ad',
+    'reference' => '0e06e3509eac3d9d4f030bae0a7fefba1d9bcf6a',
     'name' => 'ezpizee/php-libs',
   ),
   'versions' => 
@@ -43,7 +43,7 @@ private static $installed = array (
       array (
         0 => '9999999-dev',
       ),
-      'reference' => 'cc3c6bfa35ae4b2e310a616958d3a5de85583e07',
+      'reference' => 'd34d0dcc24202e47e814b298ccc4b713103fb1a8',
     ),
     'ezpizee/contextprocessor' => 
     array (
@@ -53,7 +53,7 @@ private static $installed = array (
       array (
         0 => '9999999-dev',
       ),
-      'reference' => 'fdc7ff766e30588f288be4b950560a6c5188247f',
+      'reference' => '99a37a3ea8ca2e3bffe43ef8c9581e19584788f1',
     ),
     'ezpizee/microservices-client' => 
     array (
@@ -72,7 +72,17 @@ private static $installed = array (
       'aliases' => 
       array (
       ),
-      'reference' => 'c0ad26a6780f1d2246a69dcbafa56b26b646a1ad',
+      'reference' => '0e06e3509eac3d9d4f030bae0a7fefba1d9bcf6a',
+    ),
+    'ezpizee/supported-cms' => 
+    array (
+      'pretty_version' => 'dev-master',
+      'version' => 'dev-master',
+      'aliases' => 
+      array (
+        0 => '9999999-dev',
+      ),
+      'reference' => '4f554a839576edd3e83cf97a89adda5a35833a72',
     ),
     'ezpizee/utils' => 
     array (
@@ -82,7 +92,7 @@ private static $installed = array (
       array (
         0 => '9999999-dev',
       ),
-      'reference' => 'b831eced97590bf111bf77d17887d7c18d2c81c7',
+      'reference' => '358c9d9adbbd82eeec29b0d34e838098ccdda4a4',
     ),
     'gx2cms/project' => 
     array (
@@ -101,7 +111,7 @@ private static $installed = array (
       'aliases' => 
       array (
       ),
-      'reference' => 'cd83b5421df3dbbbc66bd07a5b970c9efb6371b9',
+      'reference' => '511629a54465e89a31d3d7e4cf0935feab8b14c1',
     ),
     'mashape/unirest-php' => 
     array (
@@ -121,6 +131,41 @@ private static $installed = array (
       ),
       'reference' => 'cadcfaaa13153e0e8eb92c49a53e140cf1a85dea',
     ),
+    'sendgrid/php-http-client' => 
+    array (
+      'pretty_version' => '3.13.0',
+      'version' => '3.13.0.0',
+      'aliases' => 
+      array (
+      ),
+      'reference' => '35862113b879274c7014e09681ac279a186665f1',
+    ),
+    'sendgrid/sendgrid' => 
+    array (
+      'pretty_version' => 'dev-main',
+      'version' => 'dev-main',
+      'aliases' => 
+      array (
+        0 => '9999999-dev',
+      ),
+      'reference' => 'ab0023a6233f39e408b5eb8c4299f20790f5f5a7',
+    ),
+    'sendgrid/sendgrid-php' => 
+    array (
+      'replaced' => 
+      array (
+        0 => '*',
+      ),
+    ),
+    'starkbank/ecdsa' => 
+    array (
+      'pretty_version' => '0.0.4',
+      'version' => '0.0.4.0',
+      'aliases' => 
+      array (
+      ),
+      'reference' => '9369d35ed9019321adb4eb9fd3be21357d527c74',
+    ),
     'webconsol/handlebars.php' => 
     array (
       'pretty_version' => 'dev-master',
@@ -139,7 +184,7 @@ private static $installed = array (
       array (
         0 => '9999999-dev',
       ),
-      'reference' => '7bb971c5dbec1d8a33510edf2a17fce39b4aa946',
+      'reference' => '0d16ca05341c9bd0fc94983df0cee629127d877f',
     ),
   ),
 );

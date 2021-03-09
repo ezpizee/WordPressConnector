@@ -69,19 +69,22 @@ define('EZPIZEE_PLUGIN_URL_ROOT', plugins_url('', __FILE__));
 
 include_once __DIR__.EZPIZEE_DS.'ezpzlib'.EZPIZEE_DS.'autoload.php';
 
-\Ezpizee\ContextProcessor\CustomLoader::appendPackage([
+use Ezpizee\ContextProcessor\CustomLoader;
+use EzpizeeWordPress\EzpizeeAdmin;
+
+CustomLoader::appendPackage([
     'EzpizeeWordPress' => __DIR__ . EZPIZEE_DS . 'lib' . EZPIZEE_DS . 'src'
 ], true);
 
 if (isset($_GET['page']) &&
-    trim(filter_input(INPUT_GET, 'page', FILTER_SANITIZE_STRING)) === \EzpizeeWordPress\EzpizeeAdmin::ADMIN_PORTAL) {
+    trim(filter_input(INPUT_GET, 'page', FILTER_SANITIZE_STRING)) === EzpizeeAdmin::ADMIN_PORTAL) {
     if (strpos(filter_input(INPUT_SERVER, 'SCRIPT_FILENAME', FILTER_SANITIZE_STRING),
-            \EzpizeeWordPress\EzpizeeAdmin::WP_PAGE_ADMIN) !== false) {
+            EzpizeeAdmin::WP_PAGE_ADMIN) !== false) {
         if (!function_exists( 'wp_create_nonce')) {
             include_once EZPIZEE_WP_ROOT_DIR . EZPIZEE_DS . WPINC . EZPIZEE_DS . 'pluggable.php';
             include_once EZPIZEE_WP_ROOT_DIR . EZPIZEE_DS . WPINC . EZPIZEE_DS . 'user.php';
         }
-        \EzpizeeWordPress\EzpizeeAdmin::displayPortalPage();
+        EzpizeeAdmin::displayPortalPage();
     }
 }
 

@@ -4,7 +4,7 @@ namespace EzpizeeWordPress;
 
 use Ezpizee\ConnectorUtils\Client;
 use Ezpizee\Utils\EncodingUtil;
-use HandlebarsHelpers\Hbs;
+use Handlebars\Engine\Hbs;
 use RuntimeException;
 
 class EzpizeeAdmin
@@ -12,6 +12,7 @@ class EzpizeeAdmin
     const NONCE = EzpzClientConfig::NONCE;
     const ADMIN_PORTAL = "ezpizee_portal";
     const ADMIN_INSTALL = "ezpizee_install";
+    const KEY_PROTOCOL = 'protocol';
     const WP_PAGE_GENERAL_OPTIONS = 'options-general.php';
     const WP_PAGE_ADMIN = 'admin.php';
     private static $configFormData = [];
@@ -65,7 +66,9 @@ class EzpizeeAdmin
             }
             else
             {
-                $url = Client::cdnEndpointPfx(self::$configFormData['env']).Client::adminUri('wordpress');
+                $url = MainReactor::getConfig()->getProtocol().
+                    Client::cdnHost(MainReactor::getConfig()->getEnv()).
+                    Client::adminUri('wordpress');
                 if (self::$configFormData['env'] === 'local') {
                     Client::setIgnorePeerValidation(true);
                 }
@@ -169,8 +172,11 @@ class EzpizeeAdmin
                 if (strlen(self::$configFormData[Client::KEY_APP_NAME]) > 0) {
                     self::$configFormData[Client::KEY_ENV] = EzpizeeSanitizer::filterPOST(Client::KEY_ENV, FILTER_SANITIZE_STRING);
                     if (strlen(self::$configFormData[Client::KEY_ENV])) {
-                        EzpizeeSanitizer::sanitize(self::$configFormData);
-                        return true;
+                        self::$configFormData[self::KEY_PROTOCOL] = EzpizeeSanitizer::filterPOST(self::KEY_PROTOCOL, FILTER_SANITIZE_STRING);
+                        if (strlen(self::$configFormData[self::KEY_PROTOCOL])) {
+                            EzpizeeSanitizer::sanitize(self::$configFormData);
+                            return true;
+                        }
                     }
                 }
             }
@@ -200,6 +206,8 @@ class EzpizeeAdmin
                                 'message' => __('Failed to install. App with the same name already exists.', 'ezpizee'),
                                 'type' => 'error'
                             ]);
+                            self::$configFormData = MainReactor::getConfig()->jsonSerialize();
+                            return true;
                         }
                         else
                         {
