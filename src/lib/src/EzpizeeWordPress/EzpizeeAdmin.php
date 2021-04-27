@@ -66,7 +66,6 @@ class EzpizeeAdmin
             }
             else
             {
-                
                 $url = MainReactor::getConfig()->getProtocol().
                     Client::cdnHost(MainReactor::getConfig()->getEnv()).
                     Client::adminUri('wordpress');
